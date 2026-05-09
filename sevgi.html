@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Senin İçin...</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Havai Fişek Konteyneri */
+        #canvas-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        /* Yazı Ekranı */
+        #text-screen {
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #1a0000 0%, #000 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 2s ease-in;
+        }
+
+        /* Çizgilerin Animasyonu */
+        .line-container {
+            position: relative;
+            width: 300px;
+            height: 200px;
+        }
+
+        .line {
+            position: absolute;
+            background: linear-gradient(to right, #ff4d4d, #ffffff);
+            height: 2px;
+            width: 0;
+            transition: width 1.5s ease-out;
+        }
+
+        #main-message {
+            color: #fff;
+            font-size: 2.5rem;
+            text-shadow: 0 0 20px #ff4d4d;
+            text-align: center;
+            z-index: 10;
+            font-style: italic;
+        }
+
+        .extra-note {
+            color: #ffb3b3;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            opacity: 0;
+            animation: fadeIn 3s forwards 4s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Arka plandaki süzülen kalpler */
+        .heart {
+            position: absolute;
+            color: rgba(255, 77, 77, 0.3);
+            font-size: 20px;
+            animation: float 5s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="canvas-container">
+        <canvas id="fireworks"></canvas>
+    </div>
+
+    <div id="text-screen">
+        <div id="lines-box"></div>
+        <h1 id="main-message">Çok güzelsiniz hanımefendi...</h1>
+        <p class="extra-note">Dünyadaki tüm yıldızlar bir araya gelse, senin bir gülüşün kadar parlayamaz.</p>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('fireworks');
+        const ctx = canvas.getContext('2d');
+        const textScreen = document.getElementById('text-screen');
+        const linesBox = document.getElementById('lines-box');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Basit Havai Fişek Efekti
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 8,
+                    y: (Math.random() - 0.5) * 8
+                };
+                this.alpha = 1;
+                this.friction = 0.95;
+            }
+            draw() {
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+            update() {
+                this.velocity.x *= this.friction;
+                this.velocity.y *= this.friction;
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= 0.01;
+            }
+        }
+
+        let particles = [];
+        function createFirework() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height * 0.5;
+            const color = `hsl(${Math.random() * 360}, 50%, 50%)`;
+            for (let i = 0; i < 30; i++) {
+                particles.push(new Particle(x, y, color));
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, i) => {
+                if (p.alpha > 0) {
+                    p.update();
+                    p.draw();
+                } else {
+                    particles.splice(i, 1);
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+        setInterval(createFirework, 600);
+
+        // 5 saniye sonra sonraki ekrana geç
+        setTimeout(() => {
+            document.getElementById('canvas-container').style.display = 'none';
+            textScreen.style.display = 'flex';
+            setTimeout(() => textScreen.style.opacity = '1', 100);
+
+            // 40 Çizgi oluşturma
+            for (let i = 0; i < 40; i++) {
+                let line = document.createElement('div');
+                line.className = 'line';
+                line.style.top = Math.random() * 100 + '%';
+                line.style.left = Math.random() * 100 + '%';
+                line.style.transform = `rotate(${Math.random() * 360}deg)`;
+                linesBox.appendChild(line);
+                
+                setTimeout(() => {
+                    line.style.width = '150px';
+                }, i * 50);
+            }
+
+            // Arka plana kalpler ekle
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                textScreen.appendChild(heart);
+                setTimeout(() => heart.remove(), 5000);
+            }, 300);
+
+        }, 5000);
+    </script>
+</body>
+</html>
