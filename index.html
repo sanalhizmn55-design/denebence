@@ -3,392 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEVA ADS - Reklam ve Influencer Platformu</title>
-    <!-- Tailwind CSS (Modern Arayüz İçin) -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>DEVA ADS - 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #121214; color: #f3f4f6; }
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; }
         .page { display: none; }
         .page.active { display: block; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
 
-    <!-- ================= AUTH PAGE (GİRİŞ / KAYIT) ================= -->
-    <div id="authPage" class="page active min-h-screen flex items-center justify-center p-4">
-        <div class="bg-[#1e1e24] p-8 rounded-2xl shadow-2xl w-full max-w-md border border-zinc-800">
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-emerald-400 tracking-wider">DEVA ADS</h1>
-                <p class="text-xs text-zinc-400 mt-1">2026 Sürümü • ENES DEVA Sistemi</p>
-            </div>
-
-            <!-- Giriş Formu -->
+    <div id="authPage" class="page active min-h-screen flex items-center justify-center p-6">
+        <div class="glass p-8 rounded-2xl w-full max-w-md">
+            <h1 class="text-4xl font-extrabold text-blue-500 text-center mb-8">DEVA ADS</h1>
+            
             <div id="loginSection">
-                <h2 class="text-xl font-semibold mb-4 text-white">Giriş Yap</h2>
-                <div class="space-y-4">
-                    <input type="tel" id="loginPhone" placeholder="Telefon Numaranız (Başında 0 olmadan)" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-white focus:outline-none focus:border-emerald-500">
-                    <input type="password" id="loginPassword" placeholder="Şifreniz" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-white focus:outline-none focus:border-emerald-500">
-                    <button onclick="login()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold p-3 rounded-lg transition duration-300 cursor-pointer">Giriş Yap</button>
-                </div>
-                <p class="text-sm text-zinc-400 mt-4 text-center">Hesabınız yok mu? <span onclick="toggleAuth(false)" class="text-emerald-400 cursor-pointer hover:underline">Kayıt Olun</span></p>
+                <input type="tel" id="loginPhone" placeholder="Telefon" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 mb-4 outline-none">
+                <input type="password" id="loginPassword" placeholder="Şifre" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 mb-4 outline-none">
+                <button onclick="login()" class="w-full bg-blue-600 py-3 rounded-xl font-bold">Giriş Yap</button>
+                <p class="text-center mt-4 text-sm">Hesabın yok mu? <span onclick="toggleAuth(false)" class="text-blue-400 cursor-pointer">Kayıt Ol</span></p>
             </div>
 
-            <!-- Kayıt Formu -->
             <div id="registerSection" class="hidden">
-                <h2 class="text-xl font-semibold mb-4 text-white">Yeni Hesap Oluştur</h2>
-                <div class="space-y-4">
-                    <input type="text" id="regName" placeholder="Adınız" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-white focus:outline-none focus:border-emerald-500">
-                    <input type="text" id="regSurname" placeholder="Soyadınız" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-white focus:outline-none focus:border-emerald-500">
-                    <input type="tel" id="regPhone" placeholder="Telefon Numaranız" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-white focus:outline-none focus:border-emerald-500">
-                    <input type="password" id="regPassword" placeholder="Şifre Belirleyin" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-white focus:outline-none focus:border-emerald-500">
-                    <button onclick="register()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold p-3 rounded-lg transition duration-300 cursor-pointer">Kayıt Ol</button>
-                </div>
-                <p class="text-sm text-zinc-400 mt-4 text-center">Zaten üye misiniz? <span onclick="toggleAuth(true)" class="text-emerald-400 cursor-pointer hover:underline">Giriş Yapın</span></p>
+                <input type="text" id="regName" placeholder="Ad" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 mb-4 outline-none">
+                <input type="text" id="regSurname" placeholder="Soyad" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 mb-4 outline-none">
+                <input type="tel" id="regPhone" placeholder="Telefon" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 mb-4 outline-none">
+                <input type="password" id="regPassword" placeholder="Şifre" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 mb-4 outline-none">
+                <button onclick="register()" class="w-full bg-green-600 py-3 rounded-xl font-bold">Kaydı Tamamla</button>
+                <p class="text-center mt-4 text-sm">Zaten üye misin? <span onclick="toggleAuth(true)" class="text-blue-400 cursor-pointer">Giriş Yap</span></p>
             </div>
         </div>
     </div>
 
-    <!-- ================= DASHBOARD PAGE (ANA PANEL) ================= -->
     <div id="dashboardPage" class="page min-h-screen p-6">
-        <div class="max-w-4xl mx-auto">
-            <div class="flex justify-between items-center mb-10 border-b border-zinc-800 pb-4">
-                <div>
-                    <h1 class="text-2xl font-bold text-emerald-400">DEVA ADS Ana Panel</h1>
-                    <p id="welcomeText" class="text-sm text-zinc-400"></p>
-                </div>
-                <button onclick="logout()" class="bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white px-4 py-2 rounded-lg text-sm transition cursor-pointer">Çıkış Yap</button>
+        <div class="max-w-4xl mx-auto flex justify-between items-center mb-10">
+            <h2 class="text-2xl font-bold text-blue-500">DEVA ADS PANEL</h2>
+            <button onclick="logout()" class="text-red-400">Çıkış</button>
+        </div>
+        <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
+            <div class="glass p-8 rounded-3xl border-l-4 border-blue-500 cursor-pointer" onclick="switchPage('influencerFormPage')">
+                <h3 class="text-xl font-bold mb-2">Influencer Ol</h3>
+                <p class="text-slate-400 text-sm">Başvuru formunu doldur ve aramıza katıl.</p>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Influencer Başvuru Kartı -->
-                <div class="bg-[#1e1e24] p-6 rounded-xl border border-zinc-800 hover:border-emerald-500/40 transition">
-                    <h3 class="text-xl font-bold mb-2 text-white">Influencer Olmak İstiyorum</h3>
-                    <p class="text-zinc-400 text-sm mb-6">Sosyal medya hesaplarınızla reklam yaparak gelir elde etmek için sisteme influencer olarak başvurun.</p>
-                    <button onclick="switchPage('influencerFormPage')" class="w-full bg-emerald-500 text-black font-semibold py-3 rounded-lg hover:bg-emerald-600 transition cursor-pointer">BAŞVURU FORMU AÇ</button>
-                </div>
-
-                <!-- İşletme Reklam Kartı -->
-                <div class="bg-[#1e1e24] p-6 rounded-xl border border-zinc-800 hover:border-emerald-500/40 transition">
-                    <h3 class="text-xl font-bold mb-2 text-white">İşletme Reklamı Vermek İstiyorum</h3>
-                    <p class="text-zinc-400 text-sm mb-6">Mevcut işletmenizin, markanızın veya dükkanınızın DEVA ADS kalitesiyle geniş kitlelere reklamını yaptırın.</p>
-                    <button onclick="switchPage('businessFormPage')" class="w-full bg-zinc-700 text-white font-semibold py-3 rounded-lg hover:bg-zinc-600 transition cursor-pointer">DEVA ADS REKLAM FORMU</button>
-                </div>
+            <div class="glass p-8 rounded-3xl border-l-4 border-purple-500 cursor-pointer" onclick="switchPage('businessFormPage')">
+                <h3 class="text-xl font-bold mb-2">İşletme Reklamı</h3>
+                <p class="text-slate-400 text-sm">İşletmeni büyütmek için reklam ver.</p>
             </div>
+        </div>
+        <div class="text-center mt-20 opacity-30">
+            <p onclick="switchPage('adminPage')" class="cursor-pointer">© 2026 ENES DEVA</p>
         </div>
     </div>
 
-    <!-- ================= INFLUENCER BAŞVURU FORMU ================= -->
     <div id="influencerFormPage" class="page min-h-screen p-6">
-        <div class="max-w-xl mx-auto bg-[#1e1e24] p-8 rounded-xl border border-zinc-800">
-            <button onclick="switchPage('dashboardPage')" class="text-sm text-zinc-400 hover:text-white mb-4 block">← Panel'e Dön</button>
-            <h2 class="text-2xl font-bold mb-6 text-emerald-400">Influencer Başvuru Formu</h2>
+        <div class="max-w-xl mx-auto glass p-8 rounded-3xl">
+            <button onclick="switchPage('dashboardPage')" class="mb-4 text-slate-500">← Geri</button>
+            <h2 class="text-2xl font-bold mb-6 text-blue-400">Influencer Başvuru</h2>
             <div class="space-y-4">
-                <input type="text" id="infName" placeholder="İsim" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-white">
-                <input type="text" id="infSurname" placeholder="Soyisim" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-white">
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="text" id="infCity" placeholder="İl" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-white">
-                    <input type="text" id="infDistrict" placeholder="İlçe" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-white">
+                <input type="text" id="infName" placeholder="Ad Soyad" class="w-full bg-slate-900 p-4 rounded-xl outline-none">
+                <div>
+                    <label class="text-xs text-slate-500 ml-2">Yüz Fotoğrafı</label>
+                    <input type="file" id="infFace" class="w-full text-sm mt-1 file:bg-blue-600 file:text-white file:border-0 file:py-2 file:px-4 file:rounded-lg">
                 </div>
                 <div>
-                    <label class="block text-xs text-zinc-400 mb-1">Yüz Fotoğrafınız (Galeriden Seçin)</label>
-                    <input type="file" id="infFacePic" accept="image/*" class="w-full text-sm text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-zinc-800 file:text-white hover:file:bg-zinc-700">
+                    <label class="text-xs text-slate-500 ml-2">Kimlik Fotoğrafı</label>
+                    <input type="file" id="infId" class="w-full text-sm mt-1 file:bg-slate-700 file:text-white file:border-0 file:py-2 file:px-4 file:rounded-lg">
                 </div>
-                <div>
-                    <label class="block text-xs text-zinc-400 mb-1">Kimlik Ön Yüzü Fotoğrafı</label>
-                    <input type="file" id="infIdFront" accept="image/*" class="w-full text-sm text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-zinc-800 file:text-white hover:file:bg-zinc-700">
-                </div>
-                <div>
-                    <label class="block text-xs text-zinc-400 mb-1">Kimlik Arka Yüzü Fotoğrafı</label>
-                    <input type="file" id="infIdBack" accept="image/*" class="w-full text-sm text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-zinc-800 file:text-white hover:file:bg-zinc-700">
-                </div>
-                <button onclick="submitInfluencer()" class="w-full bg-emerald-500 text-black font-bold p-3 rounded-lg mt-4 cursor-pointer hover:bg-emerald-600">BAŞVURUYU TAMAMLA</button>
+                <button id="infBtn" onclick="submitInfluencer()" class="w-full bg-blue-600 py-4 rounded-xl font-bold">GÖNDER</button>
             </div>
         </div>
     </div>
 
-    <!-- ================= İŞLETME REKLAM BAŞVURU FORMU ================= -->
     <div id="businessFormPage" class="page min-h-screen p-6">
-        <div class="max-w-xl mx-auto bg-[#1e1e24] p-8 rounded-xl border border-zinc-800">
-            <button onclick="switchPage('dashboardPage')" class="text-sm text-zinc-400 hover:text-white mb-4 block">← Panel'e Dön</button>
-            <h2 class="text-2xl font-bold mb-6 text-emerald-400">DEVA ADS İşletme Reklam Formu</h2>
+        <div class="max-w-xl mx-auto glass p-8 rounded-3xl">
+            <button onclick="switchPage('dashboardPage')" class="mb-4 text-slate-500">← Geri</button>
+            <h2 class="text-2xl font-bold mb-6 text-purple-400">İşletme Reklam</h2>
             <div class="space-y-4">
-                <h3 class="text-sm font-bold text-zinc-300 border-b border-zinc-800 pb-1">Yetkili Kişi Bilgileri</h3>
-                <input type="text" id="bizOwnerName" placeholder="Adınız Soyadınız" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-white">
-                
-                <h3 class="text-sm font-bold text-zinc-300 border-b border-zinc-800 pb-1">İşletme Bilgileri</h3>
-                <input type="text" id="bizTitle" placeholder="İşletme Ticari Ünvanı / Adı" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-white">
-                <textarea id="bizDetails" placeholder="İşletme Faaliyet Alanı ve Reklam İstekleriniz" rows="3" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-white"></textarea>
-                
-                <h3 class="text-sm font-bold text-zinc-300 border-b border-zinc-800 pb-1">Belge Onayları</h3>
-                <div>
-                    <label class="block text-xs text-zinc-400 mb-1">Yetkili Kimlik Ön Yüzü</label>
-                    <input type="file" id="bizIdFront" accept="image/*" class="w-full text-sm text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-zinc-800 file:text-white">
-                </div>
-                <div>
-                    <label class="block text-xs text-zinc-400 mb-1">Yetkili Kimlik Arka Yüzü</label>
-                    <input type="file" id="bizIdBack" accept="image/*" class="w-full text-sm text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-zinc-800 file:text-white">
-                </div>
-                <button onclick="submitBusiness()" class="w-full bg-emerald-500 text-black font-bold p-3 rounded-lg mt-4 cursor-pointer hover:bg-emerald-600">REKLAM TALEBİNİ GÖNDER</button>
+                <input type="text" id="bizTitle" placeholder="İşletme Adı" class="w-full bg-slate-900 p-4 rounded-xl outline-none">
+                <textarea id="bizInfo" placeholder="Reklam Hakkında Bilgi" class="w-full bg-slate-900 p-4 rounded-xl outline-none h-32"></textarea>
+                <button onclick="submitBusiness()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">TALEBİ İLET</button>
             </div>
         </div>
     </div>
 
-    <!-- ================= GİZLİ ADMİN PANELİ ================= -->
-    <div id="adminPage" class="page min-h-screen p-6 bg-[#0f0f12]">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex justify-between items-center mb-8 border-b border-zinc-800 pb-4">
-                <div>
-                    <h1 class="text-3xl font-bold text-amber-400">DEVA ADS Yönetim Paneli</h1>
-                    <p class="text-xs text-zinc-500">Sadece Sistem Sahibi Giriş Yetkisine Sahiptir.</p>
-                </div>
-                <button onclick="switchPage('dashboardPage')" class="bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2 rounded-lg text-sm cursor-pointer">Kullanıcı Paneline Geç</button>
-            </div>
-
-            <div class="grid grid-cols-1 gap-10">
-                <!-- Influencer Başvuruları Listesi -->
-                <div class="bg-[#1e1e24] p-6 rounded-xl border border-zinc-800">
-                    <h2 class="text-xl font-bold mb-4 text-emerald-400 border-b border-zinc-800 pb-2">Influencer Başvuruları</h2>
-                    <div id="adminInfluencerList" class="space-y-4 overflow-x-auto">
-                        <!-- JavaScript Dinamik Dolduracak -->
-                    </div>
-                </div>
-
-                <!-- İşletme Başvuruları Listesi -->
-                <div class="bg-[#1e1e24] p-6 rounded-xl border border-zinc-800">
-                    <h2 class="text-xl font-bold mb-4 text-sky-400 border-b border-zinc-800 pb-2">İşletme Reklam Başvuruları</h2>
-                    <div id="adminBusinessList" class="space-y-4 overflow-x-auto">
-                        <!-- JavaScript Dinamik Dolduracak -->
-                    </div>
-                </div>
-            </div>
+    <div id="adminPage" class="page min-h-screen p-6 bg-slate-950">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-3xl font-black text-blue-500 mb-8 border-b border-slate-800 pb-4">ADMİN: ENES DEVA</h1>
+            <div id="adminList" class="space-y-4"></div>
+            <button onclick="switchPage('dashboardPage')" class="mt-10 text-slate-600">Paneli Kapat</button>
         </div>
     </div>
 
-    <!-- FOOTER & GİZLİ TETİKLEYİCİ -->
-    <footer class="text-center py-8 text-xs text-zinc-600 mt-12 select-none">
-        <p>© 2026 DEVA ADS. Tüm Hakları Saklıdır.</p>
-        <p class="mt-1">Sistem Altyapısı: <span onclick="switchPage('adminPage')" class="text-zinc-500 cursor-pointer hover:text-amber-500 font-semibold transition">ENES DEVA</span></p>
-    </footer>
-
-    <!-- ================= FIREBASE & LOGIC SCRIPT ================= -->
-    <!-- Firebase App ve Servis Kütüphaneleri -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-        // YANINA ALIRKEN KENDİ FIREBASE BİLGİLERİNLE DEĞİŞTİR
+        // FIREBASE BİLGİLERİN
         const firebaseConfig = {
-            apiKey: "AIzaSyYOUR_ACTUAL_API_KEY",
-            authDomain: "your-app.firebaseapp.com",
-            projectId: "your-app",
-            storageBucket: "your-app.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:12345:web:12345"
+            apiKey: "AIzaSyDh2Pu5VsAk5XQh3uO5MUXhjJcbLN2BuC0",
+            authDomain: "deva-ads.firebaseapp.com",
+            projectId: "deva-ads",
+            storageBucket: "deva-ads.firebasestorage.app",
+            messagingSenderId: "478567237387",
+            appId: "1:478567237387:web:12f5828013353c0d99c40e"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const storage = getStorage(app);
+        const IMGBB_KEY = "3003085bcb408296d98e58875d888654"; // SENİN API KEY'İN
 
-        let currentUser = null;
+        let activeUser = null;
 
-        // Sayfa Geçiş Fonksiyonu
-        window.switchPage = function(pageId) {
+        window.switchPage = (id) => {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            if(pageId === 'adminPage') {
-                loadAdminData();
-            }
-        }
+            document.getElementById(id).classList.add('active');
+            if(id === 'adminPage') loadAdmin();
+        };
 
-        // Giriş/Kayıt Panel Değişimi
-        window.toggleAuth = function(showLogin) {
-            if(showLogin) {
-                document.getElementById('loginSection').classList.remove('hidden');
-                document.getElementById('registerSection').classList.add('hidden');
-            } else {
-                document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('registerSection').classList.remove('hidden');
-            }
-        }
+        window.toggleAuth = (s) => {
+            document.getElementById('loginSection').classList.toggle('hidden', !s);
+            document.getElementById('registerSection').classList.toggle('hidden', s);
+        };
 
-        // --- AUTH LOGIC (TELEFON NUMARASI TABANLI SETDOC SİSTEMİ) ---
-        window.register = async function() {
-            const name = document.getElementById('regName').value;
-            const surname = document.getElementById('regSurname').value;
-            const phone = document.getElementById('regPhone').value.trim();
-            const password = document.getElementById('regPassword').value;
+        window.register = async () => {
+            const p = document.getElementById('regPhone').value;
+            const u = { name: document.getElementById('regName').value, sur: document.getElementById('regSurname').value, phone: p, pass: document.getElementById('regPassword').value };
+            await setDoc(doc(db, "users", p), u);
+            alert("Kayıt Başarılı!"); toggleAuth(true);
+        };
 
-            if(!name || !surname || !phone || !password) return alert("Lütfen tüm alanları doldurun.");
+        window.login = async () => {
+            const p = document.getElementById('loginPhone').value;
+            const pass = document.getElementById('loginPassword').value;
+            const s = await getDoc(doc(db, "users", p));
+            if(s.exists() && s.data().pass === pass) { activeUser = s.data(); switchPage('dashboardPage'); }
+            else alert("Hata!");
+        };
 
-            try {
-                const userRef = doc(db, "users", phone);
-                const userSnap = await getDoc(userRef);
+        window.logout = () => { activeUser = null; switchPage('authPage'); };
 
-                if (userSnap.exists()) {
-                    alert("Bu telefon numarası zaten kayıtlı!");
-                    return;
-                }
-
-                await setDoc(userRef, { name, surname, phone, password });
-                alert("Kayıt Başarılı! Giriş yapabilirsiniz.");
-                toggleAuth(true);
-            } catch(e) { alert("Hata: " + e.message); }
-        }
-
-        window.login = async function() {
-            const phone = document.getElementById('loginPhone').value.trim();
-            const password = document.getElementById('loginPassword').value;
-
-            try {
-                const userRef = doc(db, "users", phone);
-                const userSnap = await getDoc(userRef);
-
-                if(userSnap.exists() && userSnap.data().password === password) {
-                    currentUser = userSnap.data();
-                    document.getElementById('welcomeText').innerText = `Hoş geldiniz, ${currentUser.name} ${currentUser.surname}`;
-                    switchPage('dashboardPage');
-                } else {
-                    alert("Hatalı telefon numarası veya şifre!");
-                }
-            } catch(e) { alert("Hata: " + e.message); }
-        }
-
-        window.logout = function() {
-            currentUser = null;
-            switchPage('authPage');
-        }
-
-        // --- DOSYA YÜKLEME YARDIMCISI ---
-        async function uploadFile(file, path) {
+        // IMGBB YÜKLEME FONKSİYONU
+        async function upImg(file) {
             if(!file) return "";
-            const storageRef = ref(storage, path + "_" + Date.now() + "_" + file.name);
-            await uploadBytes(storageRef, file);
-            return await getDownloadURL(storageRef);
+            let fd = new FormData();
+            fd.append("image", file);
+            let res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: "POST", body: fd });
+            let json = await res.json();
+            return json.data.url;
         }
 
-        // --- INFLUENCER BAŞVURU GÖNDERİMİ ---
-        window.submitInfluencer = async function() {
-            if(!currentUser) return alert("Oturum açık değil!");
-            const name = document.getElementById('infName').value;
-            const surname = document.getElementById('infSurname').value;
-            const city = document.getElementById('infCity').value;
-            const district = document.getElementById('infDistrict').value;
-            
-            const facePic = document.getElementById('infFacePic').files[0];
-            const idFront = document.getElementById('infIdFront').files[0];
-            const idBack = document.getElementById('infIdBack').files[0];
-
-            if(!name || !surname || !city || !district || !facePic || !idFront || !idBack) {
-                return alert("Lütfen tüm form verilerini ve resimleri eksiksiz yükleyin.");
-            }
-
+        window.submitInfluencer = async () => {
+            const btn = document.getElementById('infBtn');
+            btn.innerText = "YÜKLENİYOR..."; btn.disabled = true;
             try {
-                alert("Dosyalar yükleniyor, lütfen bekleyin...");
-                const faceUrl = await uploadFile(facePic, `influencers/${currentUser.phone}_face`);
-                const idFrontUrl = await uploadFile(idFront, `influencers/${currentUser.phone}_idfront`);
-                const idBackUrl = await uploadFile(idBack, `influencers/${currentUser.phone}_idback`);
-
-                await addDoc(collection(db, "influencer_applications"), {
-                    userId: currentUser.phone,
-                    name, surname, city, district,
-                    faceUrl, idFrontUrl, idBackUrl,
-                    date: new Date().toISOString()
+                const fUrl = await upImg(document.getElementById('infFace').files[0]);
+                const iUrl = await upImg(document.getElementById('infId').files[0]);
+                await addDoc(collection(db, "inf_apps"), {
+                    user: activeUser.phone,
+                    name: document.getElementById('infName').value,
+                    face: fUrl,
+                    idImg: iUrl,
+                    date: new Date().toLocaleString()
                 });
+                alert("Başvuru Enes Deva'ya iletildi!"); switchPage('dashboardPage');
+            } catch(e) { alert("Hata oluştu!"); }
+            btn.innerText = "GÖNDER"; btn.disabled = false;
+        };
 
-                alert("Influencer başvurunuz başarıyla alındı!");
-                switchPage('dashboardPage');
-            } catch(e) { alert("Hata: " + e.message); }
-        }
+        window.submitBusiness = async () => {
+            await addDoc(collection(db, "biz_apps"), {
+                user: activeUser.phone,
+                title: document.getElementById('bizTitle').value,
+                info: document.getElementById('bizInfo').value,
+                date: new Date().toLocaleString()
+            });
+            alert("Reklam talebiniz alındı!"); switchPage('dashboardPage');
+        };
 
-        // --- İŞLETME REKLAM BAŞVURU GÖNDERİMİ ---
-        window.submitBusiness = async function() {
-            if(!currentUser) return alert("Oturum açık değil!");
-            const ownerName = document.getElementById('bizOwnerName').value;
-            const title = document.getElementById('bizTitle').value;
-            const details = document.getElementById('bizDetails').value;
-
-            const idFront = document.getElementById('bizIdFront').files[0];
-            const idBack = document.getElementById('bizIdBack').files[0];
-
-            if(!ownerName || !title || !details || !idFront || !idBack) {
-                return alert("Lütfen form verilerini ve kimlik görsellerini eksiksiz yükleyin.");
-            }
-
-            try {
-                alert("Bilgiler ve evraklar sisteme aktarılıyor...");
-                const idFrontUrl = await uploadFile(idFront, `businesses/${currentUser.phone}_idfront`);
-                const idBackUrl = await uploadFile(idBack, `businesses/${currentUser.phone}_idback`);
-
-                await addDoc(collection(db, "business_applications"), {
-                    userId: currentUser.phone,
-                    ownerName, title, details,
-                    idFrontUrl, idBackUrl,
-                    date: new Date().toISOString()
-                });
-
-                alert("İşletme reklam başvurusu başarıyla iletildi!");
-                switchPage('dashboardPage');
-            } catch(e) { alert("Hata: " + e.message); }
-        }
-
-        // --- ADMIN PANELİ VERİ ÇEKME İŞLEMLERİ ---
-        async function loadAdminData() {
-            const infListContainer = document.getElementById('adminInfluencerList');
-            const bizListContainer = document.getElementById('adminBusinessList');
-            
-            infListContainer.innerHTML = "<p class='text-zinc-500 text-sm'>Yükleniyor...</p>";
-            bizListContainer.innerHTML = "<p class='text-zinc-500 text-sm'>Yükleniyor...</p>";
-
-            try {
-                // Influencer Çek
-                const infSnap = await getDocs(collection(db, "influencer_applications"));
-                infListContainer.innerHTML = "";
-                if(infSnap.empty) infListContainer.innerHTML = "<p class='text-zinc-500 text-sm'>Başvuru bulunmuyor.</p>";
-                infSnap.forEach(doc => {
-                    const data = doc.data();
-                    infListContainer.innerHTML += `
-                        <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-2 min-w-[600px]">
-                            <div class="flex justify-between font-bold text-white text-sm">
-                                <span>Kişi: ${data.name} ${data.surname} (${data.city}/${data.district})</span>
-                                <span class="text-xs text-zinc-500">${data.date.split('T')[0]}</span>
-                            </div>
-                            <p class="text-xs text-zinc-400">Gönderen Telefon ID: ${data.userId}</p>
-                            <div class="flex gap-4 pt-2">
-                                <a href="${data.faceUrl}" target="_blank" class="text-xs bg-emerald-500/10 text-emerald-400 p-2 rounded hover:bg-emerald-500/20">Yüz Fotoğrafı</a>
-                                <a href="${data.idFrontUrl}" target="_blank" class="text-xs bg-amber-500/10 text-amber-400 p-2 rounded hover:bg-amber-500/20">Kimlik Ön</a>
-                                <a href="${data.idBackUrl}" target="_blank" class="text-xs bg-amber-500/10 text-amber-400 p-2 rounded hover:bg-amber-500/20">Kimlik Arka</a>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                // İşletme Çek
-                const bizSnap = await getDocs(collection(db, "business_applications"));
-                bizListContainer.innerHTML = "";
-                if(bizSnap.empty) bizListContainer.innerHTML = "<p class='text-zinc-500 text-sm'>Başvuru bulunmuyor.</p>";
-                bizSnap.forEach(doc => {
-                    const data = doc.data();
-                    bizListContainer.innerHTML += `
-                        <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-2 min-w-[600px]">
-                            <div class="flex justify-between font-bold text-white text-sm">
-                                <span>İşletme: ${data.title}</span>
-                                <span class="text-xs text-zinc-500">${data.date.split('T')[0]}</span>
-                            </div>
-                            <p class="text-xs text-zinc-300">Yetkili: ${data.ownerName} (Tel: ${data.userId})</p>
-                            <p class="text-sm bg-zinc-950 p-2 rounded text-zinc-400 border border-zinc-800">${data.details}</p>
-                            <div class="flex gap-4 pt-2">
-                                <a href="${data.idFrontUrl}" target="_blank" class="text-xs bg-sky-500/10 text-sky-400 p-2 rounded hover:bg-sky-500/20">Yetkili Kimlik Ön</a>
-                                <a href="${data.idBackUrl}" target="_blank" class="text-xs bg-sky-500/10 text-sky-400 p-2 rounded hover:bg-sky-500/20">Yetkili Kimlik Arka</a>
-                            </div>
-                        </div>
-                    `;
-                });
-
-            } catch(e) { console.error("Veri yükleme hatası:", e); }
+        async function loadAdmin() {
+            const list = document.getElementById('adminList');
+            list.innerHTML = "Yükleniyor...";
+            const snap = await getDocs(collection(db, "inf_apps"));
+            list.innerHTML = "";
+            snap.forEach(d => {
+                const i = d.data();
+                list.innerHTML += `<div class="glass p-4 rounded-xl flex justify-between items-center">
+                    <div><b>${i.name}</b><br><small>${i.date}</small></div>
+                    <div class="flex gap-2">
+                        <a href="${i.face}" target="_blank" class="bg-blue-500 text-xs px-2 py-1 rounded">Yüz</a>
+                        <a href="${i.idImg}" target="_blank" class="bg-slate-700 text-xs px-2 py-1 rounded">Kimlik</a>
+                    </div>
+                </div>`;
+            });
         }
     </script>
 </body>
