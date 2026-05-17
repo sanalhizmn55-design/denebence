@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Aurea | Premium Services</title>
-    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
-    
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
@@ -20,43 +18,72 @@
     </header>
 
     <nav class="categories">
-        <button onclick="filter('PUBG MOBİLE')">PUBG MOBİLE</button>
-        <button onclick="filter('Ecommerce')">E-Ticaret</button>
-        <button onclick="filter('Business')">Dükkan</button>
-        <button onclick="filter('Instagram')">Instagram</button>
+        <button onclick="filterAll()">Hepsi</button>
+        <button onclick="filterCat('PUBG')">PUBG</button>
+        <button onclick="filterCat('Ecommerce')">E-Ticaret</button>
+        <button onclick="filterCat('Business')">Dükkan</button>
+        <button onclick="filterCat('Instagram')">Instagram</button>
     </nav>
 
     <main id="app">
-        <div id="product-list" class="grid">
-            </div>
+        <div id="product-list" class="grid"></div>
     </main>
 
-    <div id="admin-modal" class="modal">
+    <div id="payment-modal" class="modal">
         <div class="modal-content">
-            <h2>Aurea Admin Panel</h2>
-            <form id="add-form">
-                <select id="cat" required>
-                    <option value="PUBG">PUBG Mobile</option>
-                    <option value="Ecommerce">E-Ticaret</option>
-                    <option value="Business">Dükkan Reklam</option>
-                    <option value="Instagram">Instagram Reklam</option>
-                </select>
-                <input type="text" id="title" placeholder="İlan Başlığı" required>
-                <textarea id="desc" placeholder="Detaylı Açıklama" required></textarea>
-                <div class="row">
-                    <input type="number" id="price" placeholder="Fiyat (TL)" required>
-                    <input type="text" id="stock" placeholder="Stok/Durum">
-                </div>
-                <input type="text" id="speed" placeholder="Teslimat Hızı (Örn: 15 Dakika)">
-                <button type="submit" id="save-btn">Sisteme Yükle</button>
-                <button type="button" onclick="closeAdmin()" class="cancel">Kapat</button>
-            </form>
+            <h3>Ödeme Bilgileri</h3>
+            <p style="font-size: 12px; color: #aaa;">Lütfen aşağıdaki IBAN'a ödemeyi yapın ve dekontu yükleyin.</p>
+            <div class="iban-box">
+                <strong>Alıcı:</strong> Seyhan Nimet Hayriye Kömbe<br>
+                <strong>IBAN:</strong> <span id="iban-text">TR03 0001 0000 1677 1503 0250 01</span>
+            </div>
+            <input type="file" id="receipt-file" accept="image/*">
+            <button onclick="uploadReceipt()" id="upload-btn">Dekontu Gönder ve Tamamla</button>
+            <button onclick="closeModals()" class="cancel">Vazgeç</button>
+        </div>
+    </div>
+
+    <div id="admin-modal" class="modal">
+        <div class="modal-content admin-scroll">
+            <h2>Aurea Yönetim</h2>
+            
+            <div class="admin-tabs">
+                <button onclick="showTab('add')">Ürün Ekle</button>
+                <button onclick="showTab('receipts')">Dekontlar</button>
+            </div>
+
+            <div id="add-section">
+                <form id="add-form">
+                    <select id="cat" required>
+                        <option value="PUBG">PUBG Mobile</option>
+                        <option value="Ecommerce">E-Ticaret</option>
+                        <option value="Business">Dükkan Reklam</option>
+                        <option value="Instagram">Instagram Reklam</option>
+                    </select>
+                    <input type="text" id="title" placeholder="İlan Başlığı" required>
+                    <textarea id="desc" placeholder="Detaylı Açıklama" required></textarea>
+                    <div class="row"><input type="number" id="price" placeholder="Fiyat (TL)" required><input type="text" id="stock" placeholder="Stok"></div>
+                    <input type="text" id="speed" placeholder="Teslimat Hızı">
+                    <button type="submit" id="save-btn">Ürünü Yayınla</button>
+                </form>
+                <hr>
+                <h4>Yayındaki Ürünler (Silmek için tıkla)</h4>
+                <div id="admin-product-list"></div>
+            </div>
+
+            <div id="receipts-section" style="display:none;">
+                <h4>Gelen Ödeme Dekontları</h4>
+                <div id="receipt-list"></div>
+            </div>
+
+            <button onclick="closeAdmin()" class="cancel">Paneli Kapat</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDgC6geqJF_uk3joWf9OBpDzti-LPni9Rw",
@@ -69,8 +96,8 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
-        // Kategoriye Göre Resimler (Senin logondan ilham alındı)
         const catImages = {
             "PUBG": "https://img.icons8.com/color/144/pubg.png",
             "Ecommerce": "https://img.icons8.com/fluency/144/shopping-cart-promotion.png",
@@ -78,68 +105,91 @@
             "Instagram": "https://img.icons8.com/fluency/144/instagram-new.png"
         };
 
-        // Ürünleri Listele
-        const productList = document.getElementById('product-list');
+        // ÜRÜNLERİ LİSTELE
         onSnapshot(collection(db, "urunler"), (snapshot) => {
-            productList.innerHTML = "";
-            snapshot.forEach((doc) => {
-                const data = doc.data();
-                productList.innerHTML += `
+            const list = document.getElementById('product-list');
+            const adminList = document.getElementById('admin-product-list');
+            list.innerHTML = ""; adminList.innerHTML = "";
+            snapshot.forEach((d) => {
+                const data = d.data();
+                const itemHtml = `
                     <div class="card">
                         <img src="${catImages[data.kategori]}" class="cat-icon">
                         <h3>${data.baslik}</h3>
-                        <p>${data.aciklama}</p>
-                        <div class="details">
-                            <span>💰 ${data.fiyat} TL</span>
-                            <span>📦 ${data.stok}</span>
-                        </div>
-                        <div class="speed">⚡ ${data.hiz}</div>
-                        <button class="buy-btn">Satın Al</button>
-                    </div>
-                `;
+                        <div class="details"><span>💰 ${data.fiyat} TL</span><span>📦 ${data.stok}</span></div>
+                        <button class="buy-btn" onclick="openPayment('${d.id}')">Ödeme Yap</button>
+                    </div>`;
+                list.innerHTML += itemHtml;
+                adminList.innerHTML += `<div class="admin-item">${data.baslik} <button onclick="deleteProduct('${d.id}')">SİL</button></div>`;
             });
         });
 
-        // Ürün Ekleme (Admin)
+        // DEKONTLARI LİSTELE
+        onSnapshot(collection(db, "dekontlar"), (snapshot) => {
+            const rList = document.getElementById('receipt-list');
+            rList.innerHTML = "";
+            snapshot.forEach((d) => {
+                const data = d.data();
+                rList.innerHTML += `
+                    <div class="receipt-card">
+                        <p>Tarih: ${new Date(data.tarih?.toDate()).toLocaleString()}</p>
+                        <a href="${data.url}" target="_blank">Dekontu Gör (Tıkla)</a>
+                        <button onclick="deleteReceipt('${d.id}')" style="background:red; color:white; border:none; padding:5px; margin-top:5px;">Kaydı Sil</button>
+                    </div>`;
+            });
+        });
+
+        // FONKSİYONLAR
+        window.deleteProduct = async (id) => { if(confirm("Ürünü silmek istediğine emin misin?")) await deleteDoc(doc(db, "urunler", id)); };
+        window.deleteReceipt = async (id) => { if(confirm("Dekont kaydını silmek istediğine emin misin?")) await deleteDoc(doc(db, "dekontlar", id)); };
+        window.openPayment = () => { document.getElementById('payment-modal').style.display = 'flex'; };
+        window.closeModals = () => { document.querySelector('.modal').style.display = 'none'; document.getElementById('payment-modal').style.display = 'none'; };
+
+        window.uploadReceipt = async () => {
+            const file = document.getElementById('receipt-file').files[0];
+            if(!file) return alert("Lütfen dekont dosyasını seçin!");
+            const btn = document.getElementById('upload-btn');
+            btn.disabled = true; btn.innerText = "Gönderiliyor...";
+            
+            const storageRef = ref(storage, 'dekontlar/' + Date.now() + "_" + file.name);
+            await uploadBytes(storageRef, file);
+            const url = await getDownloadURL(storageRef);
+            
+            await addDoc(collection(db, "dekontlar"), { url: url, tarih: serverTimestamp() });
+            alert("Dekont başarıyla gönderildi! Onay bekliyor.");
+            closeModals();
+            btn.disabled = false; btn.innerText = "Dekontu Gönder ve Tamamla";
+        };
+
+        window.showTab = (tab) => {
+            document.getElementById('add-section').style.display = tab === 'add' ? 'block' : 'none';
+            document.getElementById('receipts-section').style.display = tab === 'receipts' ? 'block' : 'none';
+        };
+
+        // ADMIN KONTROL
+        window.addEventListener('hashchange', checkAdmin);
+        function checkAdmin() {
+            if(window.location.hash === "#admin") {
+                if(prompt("Aurea Admin Şifresi:") === "aurea2026") document.getElementById('admin-modal').style.display = 'flex';
+                else window.location.hash = "";
+            }
+        }
+        window.closeAdmin = () => { document.getElementById('admin-modal').style.display = 'none'; window.location.hash = ""; };
+        checkAdmin();
+
         document.getElementById('add-form').onsubmit = async (e) => {
             e.preventDefault();
-            const saveBtn = document.getElementById('save-btn');
-            saveBtn.disabled = true;
-            saveBtn.innerText = "Yükleniyor...";
-
             await addDoc(collection(db, "urunler"), {
                 kategori: document.getElementById('cat').value,
                 baslik: document.getElementById('title').value,
                 aciklama: document.getElementById('desc').value,
                 fiyat: document.getElementById('price').value,
                 stok: document.getElementById('stock').value,
-                hiz: document.getElementById('speed').value,
-                tarih: Date.now()
+                hiz: document.getElementById('speed').value
             });
-
-            saveBtn.disabled = false;
-            saveBtn.innerText = "Sisteme Yükle";
             document.getElementById('add-form').reset();
-            alert("Aurea Sistemine Başarıyla Eklendi!");
+            alert("Eklendi!");
         };
-
-        // Admin Panel Kontrolü
-        window.addEventListener('hashchange', checkAdmin);
-        function checkAdmin() {
-            if(window.location.hash === "#admin") {
-                const pass = prompt("Aurea Admin Şifresi:");
-                if(pass === "78780078450") {
-                    document.getElementById('admin-modal').style.display = 'flex';
-                } else {
-                    window.location.hash = "";
-                }
-            }
-        }
-        window.closeAdmin = () => {
-            document.getElementById('admin-modal').style.display = 'none';
-            window.location.hash = "";
-        };
-        checkAdmin();
     </script>
 </body>
 </html>
