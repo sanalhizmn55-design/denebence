@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Aurea | Premium Services</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -18,74 +18,46 @@
     </header>
 
     <nav class="categories">
-        <button onclick="filterAll()">Hepsi</button>
-        <button onclick="filterCat('PUBG')">PUBG</button>
-        <button onclick="filterCat('Ecommerce')">E-Ticaret</button>
-        <button onclick="filterCat('Business')">Dükkan</button>
-        <button onclick="filterCat('Instagram')">Instagram</button>
+        <button onclick="loadProducts()">Hepsi</button>
+        <button onclick="loadProducts('PUBG')">PUBG</button>
+        <button onclick="loadProducts('Ecommerce')">E-Ticaret</button>
+        <button onclick="loadProducts('Business')">Dükkan</button>
+        <button onclick="loadProducts('Instagram')">Instagram</button>
     </nav>
 
     <main id="app">
         <div id="product-list" class="grid"></div>
     </main>
 
-    <div id="payment-modal" class="custom-modal">
-        <div class="modal-inner">
-            <h3>💳 Ödeme Bilgileri</h3>
-            <div class="iban-card">
-                <p><strong>Alıcı:</strong> Seyhan Nimet Hayriye Kömbe</p>
-                <p><strong>IBAN:</strong> <span class="gold-text">TR03 0001 0000 1677 1503 0250 01</span></p>
-            </div>
-            <label class="file-label">
-                <span>📁 Dekont Seç</span>
-                <input type="file" id="receipt-file" accept="image/*">
-            </label>
-            <button onclick="uploadReceipt()" id="upload-btn" class="gold-btn">Dekontu Gönder</button>
-            <button onclick="closeModals()" class="text-btn">Vazgeç</button>
-        </div>
-    </div>
-
     <div id="admin-modal" class="custom-modal">
-        <div class="modal-inner admin-area">
+        <div class="modal-inner">
             <h2>💎 Aurea Yönetim</h2>
-            <div class="tab-menu">
-                <button onclick="showTab('add')" id="tab-add-btn" class="active">Ürün Ekle</button>
-                <button onclick="showTab('receipts')" id="tab-rec-btn">Dekontlar</button>
-            </div>
-
-            <div id="add-section">
-                <form id="add-form">
-                    <select id="cat" required>
-                        <option value="PUBG">PUBG Mobile</option>
-                        <option value="Ecommerce">E-Ticaret</option>
-                        <option value="Business">Dükkan Reklam</option>
-                        <option value="Instagram">Instagram Reklam</option>
-                    </select>
-                    <input type="text" id="title" placeholder="İlan Başlığı" required>
-                    <textarea id="desc" placeholder="Ürün Detayları" required></textarea>
-                    <div class="input-row">
-                        <input type="number" id="price" placeholder="Fiyat (TL)" required>
-                        <input type="text" id="stock" placeholder="Stok">
-                    </div>
-                    <input type="text" id="speed" placeholder="Teslimat Hızı">
-                    <button type="submit" id="save-btn" class="gold-btn">Sisteme Yükle</button>
-                </form>
-                <div class="admin-divider">Yayındaki Ürünler</div>
-                <div id="admin-product-list"></div>
-            </div>
-
-            <div id="receipts-section" style="display:none;">
-                <div id="receipt-list"></div>
-            </div>
-
-            <button onclick="closeAdmin()" class="gold-btn outline">Paneli Kapat</button>
+            <form id="add-form">
+                <select id="cat" required>
+                    <option value="PUBG">PUBG Mobile</option>
+                    <option value="Ecommerce">E-Ticaret</option>
+                    <option value="Business">Dükkan Reklam</option>
+                    <option value="Instagram">Instagram Reklam</option>
+                </select>
+                <input type="text" id="title" placeholder="Ürün/Hizmet Adı" required>
+                <textarea id="desc" placeholder="Kısa Açıklama" required></textarea>
+                <div class="input-row">
+                    <input type="number" id="price" placeholder="Fiyat (TL)" required>
+                    <input type="text" id="stock" placeholder="Stok Durumu">
+                </div>
+                <button type="submit" id="save-btn" class="gold-btn">Sisteme Yükle</button>
+            </form>
+            
+            <div class="admin-divider">Yayındaki Ürünler</div>
+            <div id="admin-product-list"></div>
+            
+            <button onclick="closeAdmin()" class="gold-btn outline">Kapat</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDgC6geqJF_uk3joWf9OBpDzti-LPni9Rw",
@@ -98,7 +70,7 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const storage = getStorage(app);
+        const wpNo = "905XXXXXXXXX"; // BURAYA KENDİ NUMARANI YAZ
 
         const catIcons = {
             "PUBG": "https://img.icons8.com/color/144/pubg.png",
@@ -107,65 +79,42 @@
             "Instagram": "https://img.icons8.com/fluency/144/instagram-new.png"
         };
 
-        // Verileri Çek ve Listele
-        onSnapshot(collection(db, "urunler"), (snap) => {
-            const list = document.getElementById('product-list');
-            const adminList = document.getElementById('admin-product-list');
-            list.innerHTML = ""; adminList.innerHTML = "";
-            snap.forEach(d => {
-                const item = d.data();
-                list.innerHTML += `<div class="card">
-                    <img src="${catIcons[item.kategori]}" class="card-icon">
-                    <h3>${item.baslik}</h3>
-                    <div class="card-info"><span>💰 ${item.fiyat} TL</span><span>📦 ${item.stok}</span></div>
-                    <button class="buy-btn" onclick="openPayment()">Ödeme Yap</button>
-                </div>`;
-                adminList.innerHTML += `<div class="admin-item"><span>${item.baslik}</span><button onclick="deleteProduct('${d.id}')">SİL</button></div>`;
+        // Ürünleri Getir
+        window.loadProducts = (filter = null) => {
+            const q = filter ? query(collection(db, "urunler"), where("kategori", "==", filter)) : collection(db, "urunler");
+            onSnapshot(q, (snap) => {
+                const list = document.getElementById('product-list');
+                const adminList = document.getElementById('admin-product-list');
+                list.innerHTML = ""; if(adminList) adminList.innerHTML = "";
+                
+                snap.forEach(d => {
+                    const item = d.data();
+                    // Vitrin Kartı
+                    list.innerHTML += `
+                        <div class="card">
+                            <img src="${catIcons[item.kategori]}" class="card-icon">
+                            <h3>${item.baslik}</h3>
+                            <div class="card-info"><span>💰 ${item.fiyat} TL</span><span>📦 ${item.stok}</span></div>
+                            <button class="buy-btn" onclick="buyWP('${item.baslik}', '${item.fiyat}')">Satın Al</button>
+                        </div>`;
+                    
+                    // Admin Listesi
+                    if(adminList) {
+                        adminList.innerHTML += `<div class="admin-item"><span>${item.baslik}</span><button onclick="deleteProduct('${d.id}')">SİL</button></div>`;
+                    }
+                });
             });
-        });
-
-        // Dekontları Çek
-        onSnapshot(collection(db, "dekontlar"), (snap) => {
-            const rList = document.getElementById('receipt-list');
-            rList.innerHTML = "";
-            snap.forEach(d => {
-                const data = d.data();
-                rList.innerHTML += `<div class="receipt-item">
-                    <p>📅 ${new Date(data.tarih?.toDate()).toLocaleString()}</p>
-                    <a href="${data.url}" target="_blank">📄 Dekontu Görüntüle</a>
-                    <button onclick="deleteReceipt('${d.id}')">Kaydı Sil</button>
-                </div>`;
-            });
-        });
-
-        // Global Fonksiyonlar
-        window.openPayment = () => document.getElementById('payment-modal').style.display = 'flex';
-        window.closeModals = () => document.getElementById('payment-modal').style.display = 'none';
-        window.deleteProduct = async (id) => { if(confirm("Ürün silinsin mi?")) await deleteDoc(doc(db, "urunler", id)); };
-        window.deleteReceipt = async (id) => { if(confirm("Dekont silinsin mi?")) await deleteDoc(doc(db, "dekontlar", id)); };
-
-        window.uploadReceipt = async () => {
-            const file = document.getElementById('receipt-file').files[0];
-            if(!file) return alert("Dosya seçilmedi!");
-            const btn = document.getElementById('upload-btn');
-            btn.disabled = true; btn.innerText = "Gönderiliyor...";
-            const sRef = ref(storage, 'dekontlar/' + Date.now() + "_" + file.name);
-            await uploadBytes(sRef, file);
-            const url = await getDownloadURL(sRef);
-            await addDoc(collection(db, "dekontlar"), { url, tarih: serverTimestamp() });
-            alert("Gönderildi!");
-            closeModals();
-            btn.disabled = false; btn.innerText = "Dekontu Gönder";
         };
 
-        window.showTab = (t) => {
-            document.getElementById('add-section').style.display = t === 'add' ? 'block' : 'none';
-            document.getElementById('receipts-section').style.display = t === 'receipts' ? 'block' : 'none';
-            document.getElementById('tab-add-btn').classList.toggle('active', t === 'add');
-            document.getElementById('tab-rec-btn').classList.toggle('active', t === 'receipts');
+        // WhatsApp Yönlendirme
+        window.buyWP = (title, price) => {
+            const msg = `Merhaba Aurea, "${title}" ürününü ${price} TL karşılığında satın almak istiyorum.`;
+            window.open(`https://wa.me/${905050619393}?text=${encodeURIComponent(msg)}`, '_blank');
         };
 
-        // Admin Kontrolü
+        window.deleteProduct = async (id) => { if(confirm("Ürünü sil?")) await deleteDoc(doc(db, "urunler", id)); };
+        
+        // Admin Giriş
         function checkAdmin() {
             if(window.location.hash === "#admin") {
                 if(prompt("Aurea Şifre:") === "aurea2026") document.getElementById('admin-modal').style.display = 'flex';
@@ -174,8 +123,8 @@
         }
         window.closeAdmin = () => { document.getElementById('admin-modal').style.display = 'none'; window.location.hash = ""; };
         window.addEventListener('hashchange', checkAdmin);
-        checkAdmin();
-
+        
+        // Ürün Ekleme
         document.getElementById('add-form').onsubmit = async (e) => {
             e.preventDefault();
             await addDoc(collection(db, "urunler"), {
@@ -183,12 +132,14 @@
                 baslik: document.getElementById('title').value,
                 aciklama: document.getElementById('desc').value,
                 fiyat: document.getElementById('price').value,
-                stok: document.getElementById('stock').value,
-                hiz: document.getElementById('speed').value
+                stok: document.getElementById('stock').value
             });
             document.getElementById('add-form').reset();
             alert("Ürün başarıyla eklendi!");
         };
+
+        loadProducts();
+        checkAdmin();
     </script>
 </body>
 </html>
