@@ -2,202 +2,144 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEVA ADS - 2026</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; }
-        .page { display: none; }
-        .page.active { display: block; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Aurea | Premium Services</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div id="authPage" class="page active min-h-screen flex items-center justify-center p-6">
-        <div class="glass p-8 rounded-2xl w-full max-w-md">
-            <h1 class="text-4xl font-extrabold text-blue-500 text-center mb-8">DEVA ADS</h1>
-            
-            <div id="loginSection">
-                <input type="tel" id="loginPhone" placeholder="Telefon" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 mb-4 outline-none">
-                <input type="password" id="loginPassword" placeholder="Şifre" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 mb-4 outline-none">
-                <button onclick="login()" class="w-full bg-blue-600 py-3 rounded-xl font-bold">Giriş Yap</button>
-                <p class="text-center mt-4 text-sm">Hesabın yok mu? <span onclick="toggleAuth(false)" class="text-blue-400 cursor-pointer">Kayıt Ol</span></p>
-            </div>
+    <header>
+        <div class="logo">AUREA</div>
+        <p class="credit">Powered by ENES DEVA</p>
+    </header>
 
-            <div id="registerSection" class="hidden">
-                <input type="text" id="regName" placeholder="Ad" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 mb-4 outline-none">
-                <input type="text" id="regSurname" placeholder="Soyad" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 mb-4 outline-none">
-                <input type="tel" id="regPhone" placeholder="Telefon" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 mb-4 outline-none">
-                <input type="password" id="regPassword" placeholder="Şifre" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 mb-4 outline-none">
-                <button onclick="register()" class="w-full bg-green-600 py-3 rounded-xl font-bold">Kaydı Tamamla</button>
-                <p class="text-center mt-4 text-sm">Zaten üye misin? <span onclick="toggleAuth(true)" class="text-blue-400 cursor-pointer">Giriş Yap</span></p>
-            </div>
-        </div>
-    </div>
+    <nav class="categories">
+        <button onclick="filter('PUBG')">PUBG</button>
+        <button onclick="filter('Ecommerce')">E-Ticaret</button>
+        <button onclick="filter('Business')">Dükkan</button>
+        <button onclick="filter('Instagram')">Instagram</button>
+    </nav>
 
-    <div id="dashboardPage" class="page min-h-screen p-6">
-        <div class="max-w-4xl mx-auto flex justify-between items-center mb-10">
-            <h2 class="text-2xl font-bold text-blue-500">DEVA ADS PANEL</h2>
-            <button onclick="logout()" class="text-red-400">Çıkış</button>
-        </div>
-        <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
-            <div class="glass p-8 rounded-3xl border-l-4 border-blue-500 cursor-pointer" onclick="switchPage('influencerFormPage')">
-                <h3 class="text-xl font-bold mb-2">Influencer Ol</h3>
-                <p class="text-slate-400 text-sm">Başvuru formunu doldur ve aramıza katıl.</p>
+    <main id="app">
+        <div id="product-list" class="grid">
             </div>
-            <div class="glass p-8 rounded-3xl border-l-4 border-purple-500 cursor-pointer" onclick="switchPage('businessFormPage')">
-                <h3 class="text-xl font-bold mb-2">İşletme Reklamı</h3>
-                <p class="text-slate-400 text-sm">İşletmeni büyütmek için reklam ver.</p>
-            </div>
-        </div>
-        <div class="text-center mt-20 opacity-30">
-            <p onclick="switchPage('adminPage')" class="cursor-pointer">© 2026 ENES DEVA</p>
-        </div>
-    </div>
+    </main>
 
-    <div id="influencerFormPage" class="page min-h-screen p-6">
-        <div class="max-w-xl mx-auto glass p-8 rounded-3xl">
-            <button onclick="switchPage('dashboardPage')" class="mb-4 text-slate-500">← Geri</button>
-            <h2 class="text-2xl font-bold mb-6 text-blue-400">Influencer Başvuru</h2>
-            <div class="space-y-4">
-                <input type="text" id="infName" placeholder="Ad Soyad" class="w-full bg-slate-900 p-4 rounded-xl outline-none">
-                <div>
-                    <label class="text-xs text-slate-500 ml-2">Yüz Fotoğrafı</label>
-                    <input type="file" id="infFace" class="w-full text-sm mt-1 file:bg-blue-600 file:text-white file:border-0 file:py-2 file:px-4 file:rounded-lg">
+    <div id="admin-modal" class="modal">
+        <div class="modal-content">
+            <h2>Aurea Admin Panel</h2>
+            <form id="add-form">
+                <select id="cat" required>
+                    <option value="PUBG">PUBG Mobile</option>
+                    <option value="Ecommerce">E-Ticaret</option>
+                    <option value="Business">Dükkan Reklam</option>
+                    <option value="Instagram">Instagram Reklam</option>
+                </select>
+                <input type="text" id="title" placeholder="İlan Başlığı" required>
+                <textarea id="desc" placeholder="Detaylı Açıklama" required></textarea>
+                <div class="row">
+                    <input type="number" id="price" placeholder="Fiyat (TL)" required>
+                    <input type="text" id="stock" placeholder="Stok/Durum">
                 </div>
-                <div>
-                    <label class="text-xs text-slate-500 ml-2">Kimlik Fotoğrafı</label>
-                    <input type="file" id="infId" class="w-full text-sm mt-1 file:bg-slate-700 file:text-white file:border-0 file:py-2 file:px-4 file:rounded-lg">
-                </div>
-                <button id="infBtn" onclick="submitInfluencer()" class="w-full bg-blue-600 py-4 rounded-xl font-bold">GÖNDER</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="businessFormPage" class="page min-h-screen p-6">
-        <div class="max-w-xl mx-auto glass p-8 rounded-3xl">
-            <button onclick="switchPage('dashboardPage')" class="mb-4 text-slate-500">← Geri</button>
-            <h2 class="text-2xl font-bold mb-6 text-purple-400">İşletme Reklam</h2>
-            <div class="space-y-4">
-                <input type="text" id="bizTitle" placeholder="İşletme Adı" class="w-full bg-slate-900 p-4 rounded-xl outline-none">
-                <textarea id="bizInfo" placeholder="Reklam Hakkında Bilgi" class="w-full bg-slate-900 p-4 rounded-xl outline-none h-32"></textarea>
-                <button onclick="submitBusiness()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">TALEBİ İLET</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="adminPage" class="page min-h-screen p-6 bg-slate-950">
-        <div class="max-w-4xl mx-auto">
-            <h1 class="text-3xl font-black text-blue-500 mb-8 border-b border-slate-800 pb-4">ADMİN: ENES DEVA</h1>
-            <div id="adminList" class="space-y-4"></div>
-            <button onclick="switchPage('dashboardPage')" class="mt-10 text-slate-600">Paneli Kapat</button>
+                <input type="text" id="speed" placeholder="Teslimat Hızı (Örn: 15 Dakika)">
+                <button type="submit" id="save-btn">Sisteme Yükle</button>
+                <button type="button" onclick="closeAdmin()" class="cancel">Kapat</button>
+            </form>
         </div>
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // FIREBASE BİLGİLERİN
         const firebaseConfig = {
-            apiKey: "AIzaSyDh2Pu5VsAk5XQh3uO5MUXhjJcbLN2BuC0",
-            authDomain: "deva-ads.firebaseapp.com",
-            projectId: "deva-ads",
-            storageBucket: "deva-ads.firebasestorage.app",
-            messagingSenderId: "478567237387",
-            appId: "1:478567237387:web:12f5828013353c0d99c40e"
+            apiKey: "AIzaSyDgC6geqJF_uk3joWf9OBpDzti-LPni9Rw",
+            authDomain: "aurea-project-faa4e.firebaseapp.com",
+            projectId: "aurea-project-faa4e",
+            storageBucket: "aurea-project-faa4e.firebasestorage.app",
+            messagingSenderId: "327537229493",
+            appId: "1:327537229493:web:1fd66fa25ee75e1bd3c8fc"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const IMGBB_KEY = "3003085bcb408296d98e58875d888654"; // SENİN API KEY'İN
 
-        let activeUser = null;
-
-        window.switchPage = (id) => {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            if(id === 'adminPage') loadAdmin();
+        // Kategoriye Göre Resimler (Senin logondan ilham alındı)
+        const catImages = {
+            "PUBG": "https://img.icons8.com/color/144/pubg.png",
+            "Ecommerce": "https://img.icons8.com/fluency/144/shopping-cart-promotion.png",
+            "Business": "https://img.icons8.com/fluency/144/shop.png",
+            "Instagram": "https://img.icons8.com/fluency/144/instagram-new.png"
         };
 
-        window.toggleAuth = (s) => {
-            document.getElementById('loginSection').classList.toggle('hidden', !s);
-            document.getElementById('registerSection').classList.toggle('hidden', s);
-        };
-
-        window.register = async () => {
-            const p = document.getElementById('regPhone').value;
-            const u = { name: document.getElementById('regName').value, sur: document.getElementById('regSurname').value, phone: p, pass: document.getElementById('regPassword').value };
-            await setDoc(doc(db, "users", p), u);
-            alert("Kayıt Başarılı!"); toggleAuth(true);
-        };
-
-        window.login = async () => {
-            const p = document.getElementById('loginPhone').value;
-            const pass = document.getElementById('loginPassword').value;
-            const s = await getDoc(doc(db, "users", p));
-            if(s.exists() && s.data().pass === pass) { activeUser = s.data(); switchPage('dashboardPage'); }
-            else alert("Hata!");
-        };
-
-        window.logout = () => { activeUser = null; switchPage('authPage'); };
-
-        // IMGBB YÜKLEME FONKSİYONU
-        async function upImg(file) {
-            if(!file) return "";
-            let fd = new FormData();
-            fd.append("image", file);
-            let res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: "POST", body: fd });
-            let json = await res.json();
-            return json.data.url;
-        }
-
-        window.submitInfluencer = async () => {
-            const btn = document.getElementById('infBtn');
-            btn.innerText = "YÜKLENİYOR..."; btn.disabled = true;
-            try {
-                const fUrl = await upImg(document.getElementById('infFace').files[0]);
-                const iUrl = await upImg(document.getElementById('infId').files[0]);
-                await addDoc(collection(db, "inf_apps"), {
-                    user: activeUser.phone,
-                    name: document.getElementById('infName').value,
-                    face: fUrl,
-                    idImg: iUrl,
-                    date: new Date().toLocaleString()
-                });
-                alert("Başvuru Enes Deva'ya iletildi!"); switchPage('dashboardPage');
-            } catch(e) { alert("Hata oluştu!"); }
-            btn.innerText = "GÖNDER"; btn.disabled = false;
-        };
-
-        window.submitBusiness = async () => {
-            await addDoc(collection(db, "biz_apps"), {
-                user: activeUser.phone,
-                title: document.getElementById('bizTitle').value,
-                info: document.getElementById('bizInfo').value,
-                date: new Date().toLocaleString()
-            });
-            alert("Reklam talebiniz alındı!"); switchPage('dashboardPage');
-        };
-
-        async function loadAdmin() {
-            const list = document.getElementById('adminList');
-            list.innerHTML = "Yükleniyor...";
-            const snap = await getDocs(collection(db, "inf_apps"));
-            list.innerHTML = "";
-            snap.forEach(d => {
-                const i = d.data();
-                list.innerHTML += `<div class="glass p-4 rounded-xl flex justify-between items-center">
-                    <div><b>${i.name}</b><br><small>${i.date}</small></div>
-                    <div class="flex gap-2">
-                        <a href="${i.face}" target="_blank" class="bg-blue-500 text-xs px-2 py-1 rounded">Yüz</a>
-                        <a href="${i.idImg}" target="_blank" class="bg-slate-700 text-xs px-2 py-1 rounded">Kimlik</a>
+        // Ürünleri Listele
+        const productList = document.getElementById('product-list');
+        onSnapshot(collection(db, "urunler"), (snapshot) => {
+            productList.innerHTML = "";
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                productList.innerHTML += `
+                    <div class="card">
+                        <img src="${catImages[data.kategori]}" class="cat-icon">
+                        <h3>${data.baslik}</h3>
+                        <p>${data.aciklama}</p>
+                        <div class="details">
+                            <span>💰 ${data.fiyat} TL</span>
+                            <span>📦 ${data.stok}</span>
+                        </div>
+                        <div class="speed">⚡ ${data.hiz}</div>
+                        <button class="buy-btn">Satın Al</button>
                     </div>
-                </div>`;
+                `;
             });
+        });
+
+        // Ürün Ekleme (Admin)
+        document.getElementById('add-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const saveBtn = document.getElementById('save-btn');
+            saveBtn.disabled = true;
+            saveBtn.innerText = "Yükleniyor...";
+
+            await addDoc(collection(db, "urunler"), {
+                kategori: document.getElementById('cat').value,
+                baslik: document.getElementById('title').value,
+                aciklama: document.getElementById('desc').value,
+                fiyat: document.getElementById('price').value,
+                stok: document.getElementById('stock').value,
+                hiz: document.getElementById('speed').value,
+                tarih: Date.now()
+            });
+
+            saveBtn.disabled = false;
+            saveBtn.innerText = "Sisteme Yükle";
+            document.getElementById('add-form').reset();
+            alert("Aurea Sistemine Başarıyla Eklendi!");
+        };
+
+        // Admin Panel Kontrolü
+        window.addEventListener('hashchange', checkAdmin);
+        function checkAdmin() {
+            if(window.location.hash === "#admin") {
+                const pass = prompt("Aurea Admin Şifresi:");
+                if(pass === "aurea2026") {
+                    document.getElementById('admin-modal').style.display = 'flex';
+                } else {
+                    window.location.hash = "";
+                }
+            }
         }
+        window.closeAdmin = () => {
+            document.getElementById('admin-modal').style.display = 'none';
+            window.location.hash = "";
+        };
+        checkAdmin();
     </script>
 </body>
 </html>
