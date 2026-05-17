@@ -29,27 +29,28 @@
         <div id="product-list" class="grid"></div>
     </main>
 
-    <div id="payment-modal" class="modal">
-        <div class="modal-content">
-            <h3>Ödeme Bilgileri</h3>
-            <p style="font-size: 12px; color: #aaa;">Lütfen aşağıdaki IBAN'a ödemeyi yapın ve dekontu yükleyin.</p>
-            <div class="iban-box">
-                <strong>Alıcı:</strong> Seyhan Nimet Hayriye Kömbe<br>
-                <strong>IBAN:</strong> <span id="iban-text">TR03 0001 0000 1677 1503 0250 01</span>
+    <div id="payment-modal" class="custom-modal">
+        <div class="modal-inner">
+            <h3>💳 Ödeme Bilgileri</h3>
+            <div class="iban-card">
+                <p><strong>Alıcı:</strong> Seyhan Nimet Hayriye Kömbe</p>
+                <p><strong>IBAN:</strong> <span class="gold-text">TR03 0001 0000 1677 1503 0250 01</span></p>
             </div>
-            <input type="file" id="receipt-file" accept="image/*">
-            <button onclick="uploadReceipt()" id="upload-btn">Dekontu Gönder ve Tamamla</button>
-            <button onclick="closeModals()" class="cancel">Vazgeç</button>
+            <label class="file-label">
+                <span>📁 Dekont Seç</span>
+                <input type="file" id="receipt-file" accept="image/*">
+            </label>
+            <button onclick="uploadReceipt()" id="upload-btn" class="gold-btn">Dekontu Gönder</button>
+            <button onclick="closeModals()" class="text-btn">Vazgeç</button>
         </div>
     </div>
 
-    <div id="admin-modal" class="modal">
-        <div class="modal-content admin-scroll">
-            <h2>Aurea Yönetim</h2>
-            
-            <div class="admin-tabs">
-                <button onclick="showTab('add')">Ürün Ekle</button>
-                <button onclick="showTab('receipts')">Dekontlar</button>
+    <div id="admin-modal" class="custom-modal">
+        <div class="modal-inner admin-area">
+            <h2>💎 Aurea Yönetim</h2>
+            <div class="tab-menu">
+                <button onclick="showTab('add')" id="tab-add-btn" class="active">Ürün Ekle</button>
+                <button onclick="showTab('receipts')" id="tab-rec-btn">Dekontlar</button>
             </div>
 
             <div id="add-section">
@@ -61,22 +62,23 @@
                         <option value="Instagram">Instagram Reklam</option>
                     </select>
                     <input type="text" id="title" placeholder="İlan Başlığı" required>
-                    <textarea id="desc" placeholder="Detaylı Açıklama" required></textarea>
-                    <div class="row"><input type="number" id="price" placeholder="Fiyat (TL)" required><input type="text" id="stock" placeholder="Stok"></div>
+                    <textarea id="desc" placeholder="Ürün Detayları" required></textarea>
+                    <div class="input-row">
+                        <input type="number" id="price" placeholder="Fiyat (TL)" required>
+                        <input type="text" id="stock" placeholder="Stok">
+                    </div>
                     <input type="text" id="speed" placeholder="Teslimat Hızı">
-                    <button type="submit" id="save-btn">Ürünü Yayınla</button>
+                    <button type="submit" id="save-btn" class="gold-btn">Sisteme Yükle</button>
                 </form>
-                <hr>
-                <h4>Yayındaki Ürünler (Silmek için tıkla)</h4>
+                <div class="admin-divider">Yayındaki Ürünler</div>
                 <div id="admin-product-list"></div>
             </div>
 
             <div id="receipts-section" style="display:none;">
-                <h4>Gelen Ödeme Dekontları</h4>
                 <div id="receipt-list"></div>
             </div>
 
-            <button onclick="closeAdmin()" class="cancel">Paneli Kapat</button>
+            <button onclick="closeAdmin()" class="gold-btn outline">Paneli Kapat</button>
         </div>
     </div>
 
@@ -98,83 +100,80 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
-        const catImages = {
+        const catIcons = {
             "PUBG": "https://img.icons8.com/color/144/pubg.png",
             "Ecommerce": "https://img.icons8.com/fluency/144/shopping-cart-promotion.png",
             "Business": "https://img.icons8.com/fluency/144/shop.png",
             "Instagram": "https://img.icons8.com/fluency/144/instagram-new.png"
         };
 
-        // ÜRÜNLERİ LİSTELE
-        onSnapshot(collection(db, "urunler"), (snapshot) => {
+        // Verileri Çek ve Listele
+        onSnapshot(collection(db, "urunler"), (snap) => {
             const list = document.getElementById('product-list');
             const adminList = document.getElementById('admin-product-list');
             list.innerHTML = ""; adminList.innerHTML = "";
-            snapshot.forEach((d) => {
-                const data = d.data();
-                const itemHtml = `
-                    <div class="card">
-                        <img src="${catImages[data.kategori]}" class="cat-icon">
-                        <h3>${data.baslik}</h3>
-                        <div class="details"><span>💰 ${data.fiyat} TL</span><span>📦 ${data.stok}</span></div>
-                        <button class="buy-btn" onclick="openPayment('${d.id}')">Ödeme Yap</button>
-                    </div>`;
-                list.innerHTML += itemHtml;
-                adminList.innerHTML += `<div class="admin-item">${data.baslik} <button onclick="deleteProduct('${d.id}')">SİL</button></div>`;
+            snap.forEach(d => {
+                const item = d.data();
+                list.innerHTML += `<div class="card">
+                    <img src="${catIcons[item.kategori]}" class="card-icon">
+                    <h3>${item.baslik}</h3>
+                    <div class="card-info"><span>💰 ${item.fiyat} TL</span><span>📦 ${item.stok}</span></div>
+                    <button class="buy-btn" onclick="openPayment()">Ödeme Yap</button>
+                </div>`;
+                adminList.innerHTML += `<div class="admin-item"><span>${item.baslik}</span><button onclick="deleteProduct('${d.id}')">SİL</button></div>`;
             });
         });
 
-        // DEKONTLARI LİSTELE
-        onSnapshot(collection(db, "dekontlar"), (snapshot) => {
+        // Dekontları Çek
+        onSnapshot(collection(db, "dekontlar"), (snap) => {
             const rList = document.getElementById('receipt-list');
             rList.innerHTML = "";
-            snapshot.forEach((d) => {
+            snap.forEach(d => {
                 const data = d.data();
-                rList.innerHTML += `
-                    <div class="receipt-card">
-                        <p>Tarih: ${new Date(data.tarih?.toDate()).toLocaleString()}</p>
-                        <a href="${data.url}" target="_blank">Dekontu Gör (Tıkla)</a>
-                        <button onclick="deleteReceipt('${d.id}')" style="background:red; color:white; border:none; padding:5px; margin-top:5px;">Kaydı Sil</button>
-                    </div>`;
+                rList.innerHTML += `<div class="receipt-item">
+                    <p>📅 ${new Date(data.tarih?.toDate()).toLocaleString()}</p>
+                    <a href="${data.url}" target="_blank">📄 Dekontu Görüntüle</a>
+                    <button onclick="deleteReceipt('${d.id}')">Kaydı Sil</button>
+                </div>`;
             });
         });
 
-        // FONKSİYONLAR
-        window.deleteProduct = async (id) => { if(confirm("Ürünü silmek istediğine emin misin?")) await deleteDoc(doc(db, "urunler", id)); };
-        window.deleteReceipt = async (id) => { if(confirm("Dekont kaydını silmek istediğine emin misin?")) await deleteDoc(doc(db, "dekontlar", id)); };
-        window.openPayment = () => { document.getElementById('payment-modal').style.display = 'flex'; };
-        window.closeModals = () => { document.querySelector('.modal').style.display = 'none'; document.getElementById('payment-modal').style.display = 'none'; };
+        // Global Fonksiyonlar
+        window.openPayment = () => document.getElementById('payment-modal').style.display = 'flex';
+        window.closeModals = () => document.getElementById('payment-modal').style.display = 'none';
+        window.deleteProduct = async (id) => { if(confirm("Ürün silinsin mi?")) await deleteDoc(doc(db, "urunler", id)); };
+        window.deleteReceipt = async (id) => { if(confirm("Dekont silinsin mi?")) await deleteDoc(doc(db, "dekontlar", id)); };
 
         window.uploadReceipt = async () => {
             const file = document.getElementById('receipt-file').files[0];
-            if(!file) return alert("Lütfen dekont dosyasını seçin!");
+            if(!file) return alert("Dosya seçilmedi!");
             const btn = document.getElementById('upload-btn');
             btn.disabled = true; btn.innerText = "Gönderiliyor...";
-            
-            const storageRef = ref(storage, 'dekontlar/' + Date.now() + "_" + file.name);
-            await uploadBytes(storageRef, file);
-            const url = await getDownloadURL(storageRef);
-            
-            await addDoc(collection(db, "dekontlar"), { url: url, tarih: serverTimestamp() });
-            alert("Dekont başarıyla gönderildi! Onay bekliyor.");
+            const sRef = ref(storage, 'dekontlar/' + Date.now() + "_" + file.name);
+            await uploadBytes(sRef, file);
+            const url = await getDownloadURL(sRef);
+            await addDoc(collection(db, "dekontlar"), { url, tarih: serverTimestamp() });
+            alert("Gönderildi!");
             closeModals();
-            btn.disabled = false; btn.innerText = "Dekontu Gönder ve Tamamla";
+            btn.disabled = false; btn.innerText = "Dekontu Gönder";
         };
 
-        window.showTab = (tab) => {
-            document.getElementById('add-section').style.display = tab === 'add' ? 'block' : 'none';
-            document.getElementById('receipts-section').style.display = tab === 'receipts' ? 'block' : 'none';
+        window.showTab = (t) => {
+            document.getElementById('add-section').style.display = t === 'add' ? 'block' : 'none';
+            document.getElementById('receipts-section').style.display = t === 'receipts' ? 'block' : 'none';
+            document.getElementById('tab-add-btn').classList.toggle('active', t === 'add');
+            document.getElementById('tab-rec-btn').classList.toggle('active', t === 'receipts');
         };
 
-        // ADMIN KONTROL
-        window.addEventListener('hashchange', checkAdmin);
+        // Admin Kontrolü
         function checkAdmin() {
             if(window.location.hash === "#admin") {
-                if(prompt("Aurea Admin Şifresi:") === "aurea2026") document.getElementById('admin-modal').style.display = 'flex';
+                if(prompt("Aurea Şifre:") === "aurea2026") document.getElementById('admin-modal').style.display = 'flex';
                 else window.location.hash = "";
             }
         }
         window.closeAdmin = () => { document.getElementById('admin-modal').style.display = 'none'; window.location.hash = ""; };
+        window.addEventListener('hashchange', checkAdmin);
         checkAdmin();
 
         document.getElementById('add-form').onsubmit = async (e) => {
@@ -188,7 +187,7 @@
                 hiz: document.getElementById('speed').value
             });
             document.getElementById('add-form').reset();
-            alert("Eklendi!");
+            alert("Ürün başarıyla eklendi!");
         };
     </script>
 </body>
