@@ -19,10 +19,7 @@
 
     <nav class="categories">
         <button onclick="loadProducts()">Hepsi</button>
-        <button onclick="loadProducts('PUBG')">PUBG</button>
-        <button onclick="loadProducts('Ecommerce')">E-Ticaret</button>
-        <button onclick="loadProducts('Business')">Dükkan</button>
-        <button onclick="loadProducts('Instagram')">Instagram</button>
+        <button onclick="loadProducts('TEKSTİL')">TEKSTİL</button>
     </nav>
 
     <main id="app">
@@ -34,10 +31,7 @@
             <h2>💎 Aurea Yönetim</h2>
             <form id="add-form">
                 <select id="cat" required>
-                    <option value="PUBG">PUBG Mobile</option>
-                    <option value="Ecommerce">E-Ticaret</option>
-                    <option value="Business">Dükkan Reklam</option>
-                    <option value="Instagram">Instagram Reklam</option>
+                    <option value="TEKSTİL">tekstil</option>
                 </select>
                 <input type="text" id="title" placeholder="Ürün/Hizmet Adı" required>
                 <textarea id="desc" placeholder="Kısa Açıklama" required></textarea>
@@ -70,7 +64,7 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const wpNo = "905XXXXXXXXX"; // BURAYA KENDİ NUMARANI YAZ
+        const wpNo = "905050619393"; // BURAYA KENDİ NUMARANI YAZ
 
         const catIcons = {
             "PUBG": "https://img.icons8.com/color/144/pubg.png",
@@ -117,7 +111,7 @@
         // Admin Giriş
         function checkAdmin() {
             if(window.location.hash === "#admin") {
-                if(prompt("Aurea Şifre:") === "aurea2026") document.getElementById('admin-modal').style.display = 'flex';
+                if(prompt("Aurea Şifre:") === "78780078") document.getElementById('admin-modal').style.display = 'flex';
                 else window.location.hash = "";
             }
         }
