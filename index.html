@@ -6,7 +6,6 @@
     <title>Aurea | Premium Services</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
@@ -39,6 +38,18 @@
                     <input type="number" id="price" placeholder="Fiyat (TL)" required>
                     <input type="text" id="stock" placeholder="Stok Durumu">
                 </div>
+                
+                <div class="image-upload-group">
+                    <label for="gorsel-input" class="file-upload-btn">
+                        🖼️ Galeriden Ürün Görseli Seç
+                    </label>
+                    <input type="file" id="gorsel-input" accept="image/*" style="display: none;">
+                    
+                    <div id="preview-container" class="gorsel-onizleme-kutusu">
+                        <img id="form-gorsel-onizleme" src="" alt="Önizleme">
+                    </div>
+                </div>
+
                 <button type="submit" id="save-btn" class="gold-btn">Sisteme Yükle</button>
             </form>
             
@@ -64,14 +75,24 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const wpNo = "905050619393"; // BURAYA KENDİ NUMARANI YAZ
+        const wpNo = "905050619393";
 
-        const catIcons = {
-            "PUBG": "https://img.icons8.com/color/144/pubg.png",
-            "Ecommerce": "https://img.icons8.com/fluency/144/shopping-cart-promotion.png",
-            "Business": "https://img.icons8.com/fluency/144/shop.png",
-            "Instagram": "https://img.icons8.com/fluency/144/instagram-new.png"
-        };
+        // Seçilen görselin Base64 verisini tutacak değişken
+        let globalGorselData = "";
+
+        // Görsel Seçildiğinde Önizleme Yapan Mekanizma
+        document.getElementById('gorsel-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    globalGorselData = event.target.result;
+                    document.getElementById('form-gorsel-onizleme').src = globalGorselData;
+                    document.getElementById('preview-container').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
 
         // Ürünleri Getir
         window.loadProducts = (filter = null) => {
@@ -83,12 +104,18 @@
                 
                 snap.forEach(d => {
                     const item = d.data();
-                    // Vitrin Kartı
+                    
+                    // Eğer üründe özel görsel yüklüyse onu kullan, yoksa varsayılan boş resim ikonu göster
+                    const urunResmi = item.gorsel ? item.gorsel : "https://img.icons8.com/fluency/144/image.png";
+
+                    // Vitrin Kartı (Artık senin yüklediğin görselleri tam boy gösterecek şekilde ayarlandı)
                     list.innerHTML += `
                         <div class="card">
-                            <img src="${catIcons[item.kategori]}" class="card-icon">
+                            <div class="card-img-wrapper">
+                                <img src="${urunResmi}" class="card-icon">
+                            </div>
                             <h3>${item.baslik}</h3>
-                            <div class="card-info"><span>💰 ${item.fiyat} TL</span><span>📦 ${item.stok}</span></div>
+                            <div class="card-info"><span>💰 ${item.fiyat} TL</span><span>📦 ${item.stok || 'Mevcut'}</span></div>
                             <button class="buy-btn" onclick="buyWP('${item.baslik}', '${item.fiyat}')">Satın Al</button>
                         </div>`;
                     
@@ -103,10 +130,10 @@
         // WhatsApp Yönlendirme
         window.buyWP = (title, price) => {
             const msg = `Merhaba Aurea, "${title}" ürününü ${price} TL karşılığında satın almak istiyorum.`;
-            window.open(`https://wa.me/${905050619393}?text=${encodeURIComponent(msg)}`, '_blank');
+            window.open(`https://wa.me/${wpNo}?text=${encodeURIComponent(msg)}`, '_blank');
         };
 
-        window.deleteProduct = async (id) => { if(confirm("Ürünü sil?")) await deleteDoc(doc(db, "urunler", id)); };
+        window.deleteProduct = async (id) => { if(confirm("Ürünü sil?")) await deleteDoc(doc(doc(db, "urunler", id))); };
         
         // Admin Giriş
         function checkAdmin() {
@@ -118,18 +145,25 @@
         window.closeAdmin = () => { document.getElementById('admin-modal').style.display = 'none'; window.location.hash = ""; };
         window.addEventListener('hashchange', checkAdmin);
         
-        // Ürün Ekleme
+        // Ürün Ekleme (Görsel Verisiyle Birlikte Firebase'e Kaydeder)
         document.getElementById('add-form').onsubmit = async (e) => {
             e.preventDefault();
+            
             await addDoc(collection(db, "urunler"), {
                 kategori: document.getElementById('cat').value,
                 baslik: document.getElementById('title').value,
                 aciklama: document.getElementById('desc').value,
                 fiyat: document.getElementById('price').value,
-                stok: document.getElementById('stock').value
+                stok: document.getElementById('stock').value,
+                gorsel: globalGorselData // Yeni görsel string alanı eklendi
             });
+            
+            // Formu ve görsel önizlemeyi sıfırla
             document.getElementById('add-form').reset();
-            alert("Ürün başarıyla eklendi!");
+            document.getElementById('preview-container').style.display = 'none';
+            globalGorselData = "";
+            
+            alert("Ürün görseliyle birlikte başarıyla eklendi!");
         };
 
         loadProducts();
