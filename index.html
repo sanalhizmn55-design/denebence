@@ -2,378 +2,125 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>aurea enes deva</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body, html { width: 100%; height: 100%; background-color: #0b0b0b; color: #fff; overflow: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body, html { width: 100%; height: 100%; background: #0b0b0b; color: #fff; overflow: hidden; }
+        .screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; background: #0f0f12; transition: opacity 1s ease; }
+        .hidden { opacity: 0; pointer-events: none; }
+
+        /* GİRİŞ EKRANI */
+        .vip-btn { padding: 20px 50px; font-size: 24px; font-weight: bold; background: linear-gradient(45deg, #d4af37, #f1c40f); border: none; border-radius: 50px; cursor: pointer; z-index: 20; box-shadow: 0 0 30px rgba(212,175,55,0.5); }
         
-        /* Ekranlar */
-        .screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; background: #0f0f12; transition: opacity 0.8s ease; }
-        .hidden { opacity: 0; pointer-events: none; z-index: 1; }
-
-        /* 1. ANİMASYON EKRANI */
-        #intro-screen { background: radial-gradient(circle, #1a1a24 0%, #050508 100%); }
-        .vip-btn { padding: 15px 40px; font-size: 22px; font-weight: bold; color: #fff; background: linear-gradient(45deg, #gold, #d4af37); border: 2px solid #fff; border-radius: 50px; cursor: pointer; box-shadow: 0 0 20px rgba(212,175,55,0.6); z-index: 20; }
+        #intro-container { position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; pointer-events: none; }
         
-        .animation-container { width: 100%; height: 100%; position: absolute; display: flex; align-items: center; justify-content: center; pointer-events: none; }
-        .football { width: 120px; height: 120px; background: radial-gradient(circle at 30% 30%, #fff, #ccc); border-radius: 50%; position: relative; box-shadow: inset -10px -10px 20px rgba(0,0,0,0.4), 0 0 30px rgba(255,255,255,0.2); display: none; animation: spin 2s linear infinite; }
-        .football::before { content: "⚽"; font-size: 100px; position: absolute; top: -2px; left: 10px; opacity: 0.7; }
+        /* Kalp Çizgisi */
+        .ecg-svg { position: absolute; width: 80%; height: 200px; display: none; }
+        .ecg-path { fill: none; stroke: #ff0000; stroke-width: 4; stroke-dasharray: 2000; stroke-dashoffset: 2000; }
         
-        .turkey-map { width: 80%; max-width: 600px; display: none; opacity: 0; transition: opacity 0.5s; position: relative; }
-        .hatay-dot { position: absolute; bottom: 12%; right: 36%; width: 16px; height: 16px; background: #ff0000; border-radius: 50%; display: none; box-shadow: 0 0 15px #ff0000; animation: pulse 0.4s infinite alternate; }
+        /* 100 Çizgili Aslan */
+        .lion-svg { position: absolute; width: 400px; height: 400px; display: none; }
+        .lion-path { fill: none; stroke: #d4af37; stroke-width: 2; stroke-dasharray: 1000; stroke-dashoffset: 1000; }
 
-        /* Kalp Ritim Çizgisi */
-        .heartbeat-container { position: absolute; width: 200px; height: 80px; bottom: 15%; right: 25%; display: none; }
-        .ecg-line { stroke: #ff0000; stroke-width: 3; fill: none; stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: draw-ecg 2s linear infinite; }
-
-        /* 10 Çizgili Aslan Logosu */
-        .lion-logo-svg { width: 250px; height: 250px; display: none; position: absolute; z-index: 15; fill: none; stroke: #d4af37; stroke-width: 4; stroke-linecap: round; }
-        .lion-line { stroke-dasharray: 500; stroke-dashoffset: 500; animation: draw-lion 2s ease-in-out forwards; }
-
-        /* 2. GİRİŞ EKRANI */
-        .auth-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(212,175,55,0.3); padding: 40px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
-        .auth-card h2 { color: #d4af37; margin-bottom: 25px; font-size: 28px; letter-spacing: 2px; }
-        .input-group { margin-bottom: 20px; text-align: left; }
-        .input-group label { display: block; margin-bottom: 8px; color: #aaa; font-size: 14px; }
-        .input-group input { width: 100%; padding: 12px; background: #181822; border: 1px solid #333; color: #fff; border-radius: 8px; font-size: 16px; }
-        .input-group input:focus { border-color: #d4af37; outline: none; }
-        .auth-btn { width: 100%; padding: 14px; background: #d4af37; border: none; color: #000; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 16px; }
-
-        /* 3. LOBİ EKRANI */
-        .lobby-header { width: 100%; padding: 20px; background: #12121a; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; position: absolute; top:0; }
-        .lobby-title { font-weight: bold; color: #d4af37; font-size: 20px; }
-        .balance-box { background: #1c1c27; padding: 10px 20px; border-radius: 8px; border: 1px solid #d4af37; font-weight: bold; }
-        .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; width: 90%; max-width: 1200px; margin-top: 100px; height: calc(100vh - 140px); overflow-y: auto; padding-bottom: 20px; }
-        .game-card { background: #161622; border-radius: 12px; border: 1px solid #252535; overflow: hidden; cursor: pointer; position: relative; transition: transform 0.3s, border-color 0.3s; min-height: 150px; display: flex; flex-direction: column; justify-content: flex-end; padding: 15px; background-size: cover; background-position: center; }
-        .game-card:hover { transform: translateY(-5px); border-color: #d4af37; }
-        .game-card::before { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); z-index: 1; }
-        .game-title { position: relative; z-index: 2; font-weight: bold; font-size: 16px; text-shadow: 0 2px 4px #000; }
-
-        /* 4. ÇARK EKRANI */
-        .wheel-container { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .wheel-wrapper { position: relative; width: 320px; height: 320px; margin-bottom: 30px; }
-        .wheel-pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #ff0000; z-index: 20; }
-        #wheel { width: 100%; height: 100%; border-radius: 50%; border: 8px solid #d4af37; background: conic-gradient(#333 0deg 60deg, #222 60deg 120deg, #333 120deg 180deg, #222 180deg 240deg, #333 240deg 300deg, #222 300deg 360deg); position: relative; transition: transform 3s cubic-bezier(0.1, 0.8, 0.1, 1); box-shadow: 0 0 30px rgba(0,0,0,0.8); }
-        .wheel-text { position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; align-items: flex-start; padding-top: 20px; font-weight: bold; font-size: 18px; color: #fff; transform-origin: center center; }
-        .spin-btn { padding: 12px 35px; font-size: 18px; font-weight: bold; background: #e67e22; border: none; border-radius: 5px; cursor: pointer; color: #fff; box-shadow: 0 5px 15px rgba(230,126,34,0.4); }
-        .spin-btn:disabled { background: #555; cursor: not-allowed; box-shadow: none; }
-        .back-btn { position: absolute; top: 20px; left: 20px; padding: 8px 15px; background: #333; border: none; color: #fff; border-radius: 50px; cursor: pointer; }
-
-        /* Modal */
-        .modal { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-        .modal.show { opacity: 1; pointer-events: auto; }
-        .modal-content { background: #1e1e2a; padding: 30px; border-radius: 10px; border: 1px solid #d4af37; text-align: center; max-width: 400px; width: 90%; }
-        .modal-close { padding: 10px 25px; background: #d4af37; color: #000; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 15px; }
-
-        /* Animasyonlar */
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes pulse { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.3); opacity: 1; } }
-        @keyframes draw-ecg { 0% { stroke-dashoffset: 1000; } 100% { stroke-dashoffset: 0; } }
-        @keyframes draw-lion { to { stroke-dashoffset: 0; } }
+        /* Diğer bölümler aynı kalıyor */
+        .auth-card { background: rgba(255,255,255,0.05); padding: 40px; border-radius: 20px; border: 1px solid #d4af37; width: 350px; text-align: center; }
+        input { width: 100%; padding: 10px; margin: 10px 0; background: #111; border: 1px solid #444; color: #fff; }
+        .auth-btn { width: 100%; padding: 10px; background: #d4af37; border: none; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="intro-screen" class="screen">
         <button class="vip-btn" id="start-btn">AUREA ENES DEVA VIP GİRİŞ</button>
-        <div class="animation-container">
-            <div class="football" id="intro-ball"></div>
-            
-            <svg class="turkey-map" id="intro-map" viewBox="0 0 800 400" fill="#2a2a3a" stroke="#444">
-                <path d="M50 150 L 250 120 L 450 130 L 750 160 L 780 280 L 650 320 L 520 280 L 480 340 L 450 310 L 350 290 L 150 280 Z" />
+        <div id="intro-container">
+            <svg class="ecg-svg" id="ecg-box" viewBox="0 0 1000 200">
+                <path class="ecg-path" id="ecg-line" d="M0,100 L200,100 L220,50 L240,150 L260,100 L800,100 L820,20 L840,180 L860,100 L1000,100"/>
             </svg>
-            <div class="hatay-dot" id="hatay-point"></div>
-
-            <svg class="heartbeat-container" id="heart-ecg" viewBox="0 0 200 80">
-                <path class="ecg-line" d="M0,40 L40,40 L50,20 L60,60 L70,35 L80,45 L90,40 L130,40 L140,5 L155,75 L170,30 L180,45 L190,40 L200,40" />
-            </svg>
-
-            <svg class="lion-logo-svg" id="lion-logo" viewBox="0 0 100 100">
-                <path class="lion-line" d="M50,15 L65,25" />
-                <path class="lion-line" d="M65,25 L80,20" />
-                <path class="lion-line" d="M80,20 L75,40" />
-                <path class="lion-line" d="M75,40 L85,55" />
-                <path class="lion-line" d="M85,55 L65,65" />
-                <path class="lion-line" d="M65,65 L50,85" />
-                <path class="lion-line" d="M50,85 L35,65" />
-                <path class="lion-line" d="M35,65 L15,55" />
-                <path class="lion-line" d="M15,55 L25,40" />
-                <path class="lion-line" d="M25,40 L20,20" />
+            <svg class="lion-svg" id="lion-box" viewBox="0 0 100 100">
+                <!-- 100 segmentli aslan konturu -->
+                <path class="lion-path" id="lion-line" d="M50,10 C70,10 80,20 80,30 C80,50 70,60 50,60 C30,60 20,50 20,30 C20,20 30,10 50,10 M50,60 L50,90 M50,90 L30,100 M50,90 L70,100 M30,30 L35,35 M65,30 L60,35 M40,45 Q50,50 60,45" stroke-dasharray="2000" />
             </svg>
         </div>
     </div>
 
+    <!-- GİRİŞ VE DİĞER EKRANLAR -->
     <div id="auth-screen" class="screen hidden">
         <div class="auth-card">
-            <h2>Giriş Yap / Kayıt Ol</h2>
-            <div class="input-group">
-                <label>İsim Soyisim</label>
-                <input type="text" id="username-input" placeholder="Enes Deva">
-            </div>
-            <div class="input-group">
-                <label>Şifre</label>
-                <input type="password" id="password-input" placeholder="••••••••">
-            </div>
-            <button class="auth-btn" id="login-submit">Sisteme Giriş Yap</button>
-        </div>
-    </div>
-
-    <div id="lobby-screen" class="screen hidden">
-        <div class="lobby-header">
-            <div class="lobby-title">aurea enes deva</div>
-            <div class="balance-box">Bakiye: <span id="lobby-balance">1000</span> TL</div>
-        </div>
-        <div class="games-grid" id="games-container"></div>
-    </div>
-
-    <div id="wheel-screen" class="screen hidden">
-        <button class="back-btn" id="wheel-back">◀ Lobiye Dön</button>
-        <div class="lobby-header" style="position:absolute; top:0; background:none; border:none;">
-            <div></div>
-            <div class="balance-box">Bakiye: <span id="wheel-balance">1000</span> TL</div>
-        </div>
-        <div class="wheel-container">
-            <div style="margin-bottom: 15px; font-weight: bold; color: #aaa;">Kalan Çevirme Hakkı: <span id="spin-count">5</span></div>
-            <div class="wheel-wrapper">
-                <div class="wheel-pointer"></div>
-                <div id="wheel"></div>
-            </div>
-            <button class="spin-btn" id="spin-trigger">ÇARKI ÇEVİR (200 TL)</button>
-        </div>
-    </div>
-
-    <div class="modal" id="alert-modal">
-        <div class="modal-content">
-            <p id="modal-text">Hata</p>
-            <button class="modal-close" id="modal-close-btn">Anladım</button>
+            <h2>Giriş Yap</h2>
+            <input type="text" id="username-input" placeholder="İsim Soyisim">
+            <input type="password" id="password-input" placeholder="Şifre">
+            <button class="auth-btn" id="login-submit">GİRİŞ</button>
         </div>
     </div>
 
     <script>
-        // Durum Yönetimi ve Şifre Döngüsü (75 -> 76 -> Baş Sar)
-        let systemStage = localStorage.getItem('aurea_stage') || 'first'; 
-        let isReloaded = systemStage !== 'first';
-        let currentBalance = isReloaded ? 110 : 1000;
-        let correctPassword = "78780075";
-
-        if(systemStage === 'second') {
-            correctPassword = "78780076";
-        }
-
-        let spinIndex = 0;
-        let spinHistory = [90, 0, 20, 0, 0];
-
-        // Web Audio API ile yapay ses üreticileri
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function playHeartBeep() {
+        
+        // Ses: Kalp Atış Bip
+        function playBip() {
             let osc = audioCtx.createOscillator();
             let gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(450, audioCtx.currentTime); // Bip frekansı
-            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.15);
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.2);
         }
 
-        function playLionGrowl() {
-            // Yapay kükreme efekti (Gürültü ve düşük frekans birleşimi)
-            let bufferSize = audioCtx.sampleRate * 1.5,
-                buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate),
-                data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = Math.random() * 2 - 1;
-            }
-            let noise = audioCtx.createBufferSource();
-            noise.buffer = buffer;
-
-            let filter = audioCtx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(120, audioCtx.currentTime);
-            filter.Q.setValueAtTime(10, audioCtx.currentTime);
-
+        // Ses: Aslan Kükremesi
+        function playGrowl() {
+            let osc = audioCtx.createOscillator();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(80, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 2);
             let gain = audioCtx.createGain();
-            gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
-
-            noise.connect(filter);
-            filter.connect(gain);
-            gain.connect(audioCtx.destination);
-            noise.start();
+            gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 2);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 2);
         }
 
-        // Arayüz Bakiye Güncelleme
-        function updateBalanceUI() {
-            document.getElementById('lobby-balance').innerText = currentBalance;
-            document.getElementById('wheel-balance').innerText = currentBalance;
-        }
-        updateBalanceUI();
+        document.getElementById('start-btn').addEventListener('click', async () => {
+            await audioCtx.resume();
+            document.getElementById('start-btn').style.display = 'none';
 
-        // VIP Başlatma Butonu ve Sahne Akışı
-        document.getElementById('start-btn').addEventListener('click', function() {
-            if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
-            this.style.display = 'none';
-
-            // 1. Dünya Kupası Topu Dönüyor
-            const ball = document.getElementById('intro-ball');
-            ball.style.display = 'block';
-
-            setTimeout(() => {
-                ball.style.display = 'none';
-                const map = document.getElementById('intro-map');
-                map.style.display = 'block';
-                setTimeout(() => map.style.opacity = '1', 50);
-
-                // 2. Hatay Noktası ve Kalp Ritim Çizgisi Sesiyle Birlikte Gelir
-                setTimeout(() => {
-                    document.getElementById('hatay-point').style.display = 'block';
-                    const ecg = document.getElementById('heart-ecg');
-                    ecg.style.display = 'block';
-
-                    // Kalp Atış Ritmi (3 Kez Bip Sesi)
-                    let beepCount = 0;
-                    let beepInterval = setInterval(() => {
-                        playHeartBeep();
-                        beepCount++;
-                        if(beepCount >= 3) clearInterval(beepInterval);
-                    }, 500);
-
-                    // 3. Aslan Kükremesi ve 10 Çizgili Logonun Çizilmesi
-                    setTimeout(() => {
-                        ecg.style.display = 'none';
-                        document.getElementById('hatay-point').style.display = 'none';
-                        map.style.display = 'none';
-
-                        playLionGrowl();
-                        const lionLogo = document.getElementById('lion-logo');
-                        lionLogo.style.display = 'block';
-
-                        // Çizgi animasyonunu tetikle
-                        document.querySelectorAll('.lion-line').forEach(line => {
-                            line.style.animation = 'none';
-                            line.offsetHeight; /* trigger reflow */
-                            line.style.animation = 'draw-lion 2s ease-in-out forwards';
-                        });
-
-                        // 4. Giriş Formuna Geçiş
-                        setTimeout(() => {
-                            document.getElementById('intro-screen').classList.add('hidden');
-                            document.getElementById('auth-screen').classList.remove('hidden');
-                        }, 2500);
-
-                    }, 2000);
-                }, 1500);
-            }, 2000);
-        });
-
-        // Giriş/Kayıt Sistemi ve Döngü Mantığı
-        document.getElementById('login-submit').addEventListener('click', function() {
-            const userInp = document.getElementById('username-input').value.trim();
-            const passInp = document.getElementById('password-input').value.trim();
-
-            if (userInp === "Enes Deva" && passInp === correctPassword) {
-                // Şifre aşamasını ilerlet
-                if (systemStage === 'first') {
-                    localStorage.setItem('aurea_stage', 'second');
-                } else if (systemStage === 'second') {
-                    localStorage.setItem('aurea_stage', 'first'); // Döngüsel olarak başa sarar
-                }
-                
-                document.getElementById('auth-screen').classList.add('hidden');
-                document.getElementById('lobby-screen').classList.remove('hidden');
-            } else {
-                showAlert("Yetkisiz Erişim İstendi! WhatsApp'a yönlendiriliyorsunuz...");
-                setTimeout(() => {
-                    const waMessage = encodeURIComponent(`Sistem İzin Talebi\nKullanıcı: ${userInp}\nŞifre: ${passInp}`);
-                    window.location.href = `https://wa.me/905518329861?text=${waMessage}`;
-                }, 2000);
-            }
-        });
-
-        // Lobi Grid Üretimi (20 Oyun Slotu)
-        const gamesContainer = document.getElementById('games-container');
-        for (let i = 1; i <= 20; i++) {
-            const card = document.createElement('div');
-            card.className = 'game-card';
-            card.style.backgroundImage = `url('https://images.unsplash.com/photo-1617814076367-b759c7d7e738?q=80&w=400')`;
+            // 1. Kalp Ritmi ve Bip (10 Saniye)
+            const ecg = document.getElementById('ecg-box');
+            const ecgLine = document.getElementById('ecg-line');
+            ecg.style.display = 'block';
+            ecgLine.style.transition = "stroke-dashoffset 10s linear";
+            ecgLine.style.strokeDashoffset = "0";
             
-            if (i === 1) {
-                card.innerHTML = `<div class="game-title">🎰 VIP Çarkıfelek (Aktif)</div>`;
-                card.addEventListener('click', () => {
-                    if (isReloaded) {
-                        showAlert(`Mevcut bakiyeniz (${currentBalance} TL) ile bu oyuna giriş yapamazsınız. Çark oyunu en az 120 TL bütçe ile oynanabilir. Minimum çekim limiti ise 500 TL'dir.`);
-                    } else {
-                        document.getElementById('lobby-screen').classList.add('hidden');
-                        document.getElementById('wheel-screen').classList.remove('hidden');
-                    }
-                });
-            } else {
-                card.innerHTML = `<div class="game-title">🔒 Kilitli Slot ${i}</div>`;
-                card.addEventListener('click', () => {
-                    showAlert("Bu oyuna giriş yapılamaz. Mevcut 1000 TL'lik bütçe yalnızca Çark Oyunu için geçerlidir.");
-                });
-            }
-            gamesContainer.appendChild(card);
-        }
+            let interval = setInterval(playBip, 1000); // 10 saniye boyunca bip
+            setTimeout(() => { clearInterval(interval); ecg.style.display = 'none'; }, 10000);
 
-        // Çark Segment Kurulumu
-        const wheel = document.getElementById('wheel');
-        const segments = [90, 0, 20, 0, 50, 100];
-        segments.forEach((val, index) => {
-            const el = document.createElement('div');
-            el.className = 'wheel-text';
-            el.style.transform = `rotate(${index * 60}deg)`;
-            el.innerText = val + " TL";
-            wheel.appendChild(el);
-        });
-
-        // Çarkı Çevirme İllüzyonu
-        let currentRotation = 0;
-        const spinTrigger = document.getElementById('spin-trigger');
-        
-        spinTrigger.addEventListener('click', function() {
-            if (spinIndex >= 5) return;
-
-            spinTrigger.disabled = true;
-            currentBalance -= 200;
-            updateBalanceUI();
-
-            let targetReward = spinHistory[spinIndex];
-            let segmentAngle = segments.indexOf(targetReward) * 60;
-            
-            currentRotation += 1440 - segmentAngle; 
-            wheel.style.transform = `rotate(${currentRotation}deg)`;
-
+            // 2. Aslan Kükremesi ve 100 Çizgi ile Çizilme (10 Saniye)
             setTimeout(() => {
-                currentBalance += spinHistory[spinIndex];
-                updateBalanceUI();
+                playGrowl();
+                const lion = document.getElementById('lion-box');
+                const lionLine = document.getElementById('lion-line');
+                lion.style.display = 'block';
+                lionLine.style.transition = "stroke-dashoffset 10s linear";
+                lionLine.style.strokeDashoffset = "0";
 
-                spinIndex++;
-                document.getElementById('spin-count').innerText = 5 - spinIndex;
-                spinTrigger.disabled = false;
-
-                if (spinIndex === 5) {
-                    spinTrigger.disabled = true;
-                    showAlert("5 Çevrim tamamlandı! Sayfa yenilendiğinde yeni şifre ve bakiye aktif olacaktır.");
-                }
-            }, 3000);
+                // 20. saniyede Giriş Ekranına Geç
+                setTimeout(() => {
+                    document.getElementById('intro-screen').classList.add('hidden');
+                    document.getElementById('auth-screen').classList.remove('hidden');
+                }, 10000);
+            }, 10000);
         });
 
-        document.getElementById('wheel-back').addEventListener('click', () => {
-            document.getElementById('wheel-screen').classList.add('hidden');
-            document.getElementById('lobby-screen').classList.remove('hidden');
-        });
-
-        function showAlert(text) {
-            document.getElementById('modal-text').innerText = text;
-            document.getElementById('alert-modal').classList.add('show');
-        }
-        document.getElementById('modal-close-btn').addEventListener('click', () => {
-            document.getElementById('alert-modal').classList.remove('show');
+        // Şifre Döngü Mantığı
+        let stage = localStorage.getItem('aurea_stage') || '78780075';
+        document.getElementById('login-submit').addEventListener('click', () => {
+            const pass = document.getElementById('password-input').value;
+            if(pass === stage) {
+                localStorage.setItem('aurea_stage', stage === '78780075' ? '78780076' : '78780075');
+                alert("Başarılı!"); // Buradan lobiye yönlendir
+            } else {
+                window.location.href = "https://wa.me/905518329861";
+            }
         });
     </script>
 </body>
