@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aurea enes deva</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body, html { width: 100%; height: 100%; background-color: #0b0b0b; color: #fff; overflow: hidden; }
+        
+        /* Ortak Ekran Tasarımları */
+        .screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; background: #0f0f12; transition: opacity 0.8s ease; }
+        .hidden { opacity: 0; pointer-events: none; z-index: 1; }
+
+        /* 1. GİRİŞ EKRANI & ANİMASYON */
+        #intro-screen { background: radial-gradient(circle, #1a1a24 0%, #050508 100%); }
+        .vip-btn { padding: 15px 40px; font-size: 22px; font-weight: bold; color: #fff; background: linear-gradient(45deg, #gold, #d4af37); border: 2px solid #fff; border-radius: 50px; cursor: pointer; box-shadow: 0 0 20px rgba(212,175,55,0.6); transition: transform 0.3s; }
+        .vip-btn:hover { transform: scale(1.05); }
+        
+        .animation-container { width: 100%; height: 100%; position: absolute; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+        .football { width: 120px; height: 120px; background: radial-gradient(circle at 30% 30%, #fff, #ccc); border-radius: 50%; position: relative; box-shadow: inset -10px -10px 20px rgba(0,0,0,0.4), 0 0 30px rgba(255,255,255,0.2); display: none; animation: spin 2s linear infinite; }
+        /* Futbol topu desen efekti */
+        .football::before { content: "⚽"; font-size: 100px; position: absolute; top: -2px; left: 10px; opacity: 0.7; }
+        
+        .turkey-map { width: 80%; max-width: 600px; display: none; opacity: 0; transition: opacity 0.5s; position: relative; }
+        .hatay-dot { position: absolute; bottom: 12%; right: 36%; width: 15px; height: 15px; background: #ff0000; border-radius: 50%; display: none; box-shadow: 0 0 15px #ff0000; animation: pulse 0.5s infinite alternate; }
+
+        /* 2. KAYIT / GİRİŞ EKRANI */
+        .auth-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(212,175,55,0.3); padding: 40px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+        .auth-card h2 { color: #d4af37; margin-bottom: 25px; font-size: 28px; letter-spacing: 2px; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; margin-bottom: 8px; color: #aaa; font-size: 14px; }
+        .input-group input { width: 100%; padding: 12px; background: #181822; border: 1px solid #333; color: #fff; border-radius: 8px; font-size: 16px; }
+        .input-group input:focus { border-color: #d4af37; outline: none; }
+        .auth-btn { width: 100%; padding: 14px; background: #d4af37; border: none; color: #000; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 16px; margin-top: 10px; }
+
+        /* 3. LOBİ (ŞANS OYUNLARI) EKRANI */
+        .lobby-header { width: 100%; padding: 20px; background: #12121a; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; position: absolute; top:0; }
+        .lobby-title { font-weight: bold; color: #d4af37; font-size: 20px; }
+        .balance-box { background: #1c1c27; padding: 10px 20px; border-radius: 8px; border: 1px solid #d4af37; font-weight: bold; }
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; width: 90%; max-width: 1200px; margin-top: 100px; height: calc(100vh - 140px); overflow-y: auto; padding-bottom: 20px; }
+        .game-card { background: #161622; border-radius: 12px; border: 1px solid #252535; overflow: hidden; cursor: pointer; position: relative; transition: transform 0.3s, border-color 0.3s; min-height: 150px; display: flex; flex-direction: column; justify-content: flex-end; padding: 15px; background-size: cover; background-position: center; }
+        .game-card:hover { transform: translateY(-5px); border-color: #d4af37; }
+        .game-card::before { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); z-index: 1; }
+        .game-title { position: relative; z-index: 2; font-weight: bold; font-size: 16px; text-shadow: 0 2px 4px #000; }
+
+        /* 4. ÇARK OYUNU EKRANI */
+        .wheel-container { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .wheel-wrapper { position: relative; width: 320px; height: 320px; margin-bottom: 30px; }
+        .wheel-pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #ff0000; z-index: 20; }
+        #wheel { width: 100%; height: 100%; border-radius: 50%; border: 8px solid #d4af37; background: conic-gradient(#333 0deg 60deg, #222 60deg 120deg, #333 120deg 180deg, #222 180deg 240deg, #333 240deg 300deg, #222 300deg 360deg); position: relative; transition: transform 3s cubic-bezier(0.1, 0.8, 0.1, 1); box-shadow: 0 0 30px rgba(0,0,0,0.8); }
+        .wheel-text { position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; align-items: flex-start; padding-top: 20px; font-weight: bold; font-size: 18px; color: #fff; transform-origin: center center; }
+        .spin-btn { padding: 12px 35px; font-size: 18px; font-weight: bold; background: #e67e22; border: none; border-radius: 5px; cursor: pointer; color: #fff; box-shadow: 0 5px 15px rgba(230,126,34,0.4); }
+        .spin-btn:disabled { background: #555; cursor: not-allowed; box-shadow: none; }
+        .back-btn { position: absolute; top: 20px; left: 20px; padding: 8px 15px; background: #333; border: none; color: #fff; border-radius: 50px; cursor: pointer; }
+
+        /* Modal/Popup */
+        .modal { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        .modal.show { opacity: 1; pointer-events: auto; }
+        .modal-content { background: #1e1e2a; padding: 30px; border-radius: 10px; border: 1px solid #d4af37; text-align: center; max-width: 400px; width: 90%; }
+        .modal-content p { font-size: 16px; line-height: 1.6; margin-bottom: 20px; }
+        .modal-close { padding: 10px 25px; background: #d4af37; color: #000; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+
+        /* Animasyon Tanımları */
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes pulse { 0% { transform: scale(0.8); opacity: 0.6; } 100% { transform: scale(1.2); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <!-- SESSİZ SES EFEKTLERİ (Audio API alternatifli simülasyon) -->
+    <audio id="lion-sound" src="https://actions.google.com/sounds/v1/animals/lion_growl.ogg" preload="auto"></audio>
+
+    <!-- 1. GİRİŞ EKRANI -->
+    <div id="intro-screen" class="screen">
+        <button class="vip-btn" id="start-btn">AUREA ENES DEVA VIP GİRİŞ</button>
+        <div class="animation-container">
+            <div class="football" id="intro-ball"></div>
+            <!-- SVG Basit Türkiye Haritası Şablonu -->
+            <svg class="turkey-map" id="intro-map" viewBox="0 0 800 400" fill="#2a2a3a" stroke="#444">
+                <rect width="100%" height="100%" fill="transparent"/>
+                <path d="M50 150 L 250 120 L 450 130 L 750 160 L 780 280 L 650 320 L 520 280 L 480 340 L 450 310 L 350 290 L 150 280 Z" />
+                <circle cx="490" cy="305" r="8" fill="none" /> <!-- Temsili Hatay Koordinatı -->
+            </svg>
+            <div class="hatay-dot" id="hatay-point"></div>
+        </div>
+    </div>
+
+    <!-- 2. KAYIT / GİRİŞ EKRANI -->
+    <div id="auth-screen" class="screen hidden">
+        <div class="auth-card">
+            <h2>Giriş Yap / Kayıt Ol</h2>
+            <div class="input-group">
+                <label>İsim Soyisim</label>
+                <input type="text" id="username-input" placeholder="Enes Deva">
+            </div>
+            <div class="input-group">
+                <label>Şifre</label>
+                <input type="password" id="password-input" placeholder="••••••••">
+            </div>
+            <button class="auth-btn" id="login-submit">Sisteme Giriş Yap</button>
+        </div>
+    </div>
+
+    <!-- 3. LOBİ EKRANI -->
+    <div id="lobby-screen" class="screen hidden">
+        <div class="lobby-header">
+            <div class="lobby-title">aurea enes deva</div>
+            <div class="balance-box">Bakiye: <span id="lobby-balance">1000</span> TL</div>
+        </div>
+        <div class="games-grid" id="games-container">
+            <!-- 20 Adet görsel slot döngüyle dolacak -->
+        </div>
+    </div>
+
+    <!-- 4. ÇARK OYUNU EKRANI -->
+    <div id="wheel-screen" class="screen hidden">
+        <button class="back-btn" id="wheel-back">◀ Lobiye Dön</button>
+        <div class="lobby-header" style="position:absolute; top:0; background:none; border:none;">
+            <div></div>
+            <div class="balance-box">Bakiye: <span id="wheel-balance">1000</span> TL</div>
+        </div>
+        
+        <div class="wheel-container">
+            <div style="margin-bottom: 15px; font-weight: bold; color: #aaa;">Kalan Çevirme Hakkı: <span id="spin-count">5</span></div>
+            <div class="wheel-wrapper">
+                <div class="wheel-pointer"></div>
+                <div id="wheel">
+                    <!-- Dilim metinleri dinamik atanacak -->
+                </div>
+            </div>
+            <button class="spin-btn" id="spin-trigger">ÇARKI ÇEVİR (200 TL)</button>
+        </div>
+    </div>
+
+    <!-- BİLGİLENDİRME MODALI -->
+    <div class="modal" id="alert-modal">
+        <div class="modal-content">
+            <p id="modal-text">Hata mesajı.</p>
+            <button class="modal-close" id="modal-close-btn">Anladım</button>
+        </div>
+    </div>
+
+    <script>
+        // Durum Yönetimi (State)
+        let isReloaded = localStorage.getItem('aurea_reloaded') === 'true';
+        let currentBalance = isReloaded ? 110 : 1000;
+        let correctPassword = isReloaded ? "78780071" : "78780078";
+        let spinIndex = 0; 
+        let spinHistory = [90, 0, 20, 0, 0]; // Çarkın duracağı kazanç sırası
+
+        // Sayfa yenileme takibi tetikleyici düzeni
+        window.addEventListener('beforeunload', function () {
+            localStorage.setItem('aurea_reloaded', 'true');
+        });
+
+        // DOM Elementleri
+        const introScreen = document.getElementById('intro-screen');
+        const authScreen = document.getElementById('auth-screen');
+        const lobbyScreen = document.getElementById('lobby-screen');
+        const wheelScreen = document.getElementById('wheel-screen');
+        const alertModal = document.getElementById('alert-modal');
+        const modalText = document.getElementById('modal-text');
+
+        // Bakiyeleri Senkronize Et
+        function updateBalanceUI() {
+            document.getElementById('lobby-balance').innerText = currentBalance;
+            document.getElementById('wheel-balance').innerText = currentBalance;
+        }
+        updateBalanceUI();
+
+        // Tam Ekran Tetikleyici ve Animasyon Başlatma
+        document.getElementById('start-btn').addEventListener('click', function() {
+            // Tam ekran modu aktivasyonu (Bağlantı gizleme amaçlı)
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            }
+            
+            this.style.display = 'none';
+            
+            // 1. Aşama: Dünya kupası futbol topu beliriyor
+            const ball = document.getElementById('intro-ball');
+            ball.style.display = 'block';
+            
+            setTimeout(() => {
+                // 2. Aşama: Top kayboluyor, Türkiye haritası geliyor
+                ball.style.display = 'none';
+                const map = document.getElementById('intro-map');
+                map.style.display = 'block';
+                setTimeout(() => map.style.opacity = '1', 50);
+                
+                // 3. Aşama: Hatay'a odaklanma ve Aslan Kükremesi
+                setTimeout(() => {
+                    const dot = document.getElementById('hatay-point');
+                    dot.style.display = 'block';
+                    
+                    // Ses çalma denemesi
+                    const lionSound = document.getElementById('lion-sound');
+                    lionSound.play().catch(e => console.log("Ses çalma tarayıcı engeline takıldı."));
+                    
+                    // 4. Aşama: Giriş ekranına geçiş
+                    setTimeout(() => {
+                        introScreen.classList.add('hidden');
+                        authScreen.classList.remove('hidden');
+                    }, 2500);
+
+                }, 1500);
+            }, 2000);
+        });
+
+        // Giriş Kontrol Mekanizması
+        document.getElementById('login-submit').addEventListener('click', function() {
+            const userInp = document.getElementById('username-input').value.trim();
+            const passInp = document.getElementById('password-input').value.trim();
+
+            if (userInp === "Enes Deva" && passInp === correctPassword) {
+                authScreen.classList.add('hidden');
+                lobbyScreen.classList.remove('hidden');
+            } else {
+                // WhatsApp İzin Talebi Yönlendirmesi
+                showAlert("Yetkisiz Erişim! Kullanıcı adı veya şifre hatalı. WhatsApp üzerinden erişim talebi gönderiliyor...");
+                setTimeout(() => {
+                    const waMessage = encodeURIComponent(`Sisteme Giriş İzin Talebi\nGiriş Yapılmak İstenen İsim: ${userInp}\nŞifre Denemesi: ${passInp}`);
+                    window.location.href = `https://wa.me/905518329861?text=${waMessage}`;
+                }, 2000);
+            }
+        });
+
+        // Lobi Oyun Gridini Oluşturma (20 Efsane Görsel Slot)
+        const gamesContainer = document.getElementById('games-container');
+        const customImages = [
+            "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?q=80&w=400", // Temsili Efsane Spor Arabalar / Motorlar
+            "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=400",
+            "https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=400"
+        ];
+
+        for (let i = 1; i <= 20; i++) {
+            const card = document.createElement('div');
+            card.className = 'game-card';
+            // Arka plan görsellerini döngüsel olarak estetik render etme
+            const imgUrl = customImages[i % customImages.length];
+            card.style.backgroundImage = `url('${imgUrl}')`;
+            
+            if (i === 1) {
+                card.innerHTML = `<div class="game-title">🎰 VIP Çarkıfelek (Aktif)</div>`;
+                card.addEventListener('click', () => {
+                    if (isReloaded) {
+                        showAlert("Mevcut bakiyeniz (110 TL) ile bu oyuna giriş yapamazsınız. Çark oyunu en az 120 TL bütçe ile oynanabilir. Minimum çekim limiti ise 500 TL'dir.");
+                    } else {
+                        lobbyScreen.classList.add('hidden');
+                        wheelScreen.classList.remove('hidden');
+                    }
+                });
+            } else {
+                card.innerHTML = `<div class="game-title">🔒 Efsane Oyun Slotu ${i}</div>`;
+                card.addEventListener('click', () => {
+                    showAlert(`Bu oyuna giriş yapılamaz. Mevcut 1000 TL'lik başlangıç bütçesi sadece Çark Oyunu için tanımlanmıştır.`);
+                });
+            }
+            gamesContainer.appendChild(card);
+        }
+
+        // Çark Dilim Tasarımları Yerleşimi
+        const wheel = document.getElementById('wheel');
+        const segments = [90, 0, 20, 0, 50, 100]; // Kadran değerleri
+        segments.forEach((val, index) => {
+            const el = document.createElement('div');
+            el.className = 'wheel-text';
+            el.style.transform = `rotate(${index * 60}deg)`;
+            el.innerText = val + " TL";
+            wheel.appendChild(el);
+        });
+
+        // Çarkı Çevirme Algoritması (Hileli Akış Sistemi)
+        let currentRotation = 0;
+        const spinTrigger = document.getElementById('spin-trigger');
+        
+        spinTrigger.addEventListener('click', function() {
+            if (spinIndex >= 5) {
+                showAlert("5 çevirme hakkınız bitti!");
+                return;
+            }
+
+            spinTrigger.disabled = true;
+            
+            // Her çevirmede bakiye net 200 TL azalır
+            currentBalance -= 200;
+            updateBalanceUI();
+
+            // Tam olarak 360 derece ve katları üzerinde hedef dilime denk getirme hesabı
+            let targetReward = spinHistory[spinIndex];
+            let segmentAngle = segments.indexOf(targetReward) * 60;
+            
+            // Çarkı tam tur attırıp hedef açıya sabitleme (Geriye doğru hesaplama ibre üstte olduğundan)
+            currentRotation += 1440 - segmentAngle; 
+            wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+            setTimeout(() => {
+                let reward = spinHistory[spinIndex];
+                currentBalance += reward;
+                updateBalanceUI();
+
+                spinIndex++;
+                document.getElementById('spin-count').innerText = 5 - spinIndex;
+                spinTrigger.disabled = false;
+
+                if (spinIndex === 5) {
+                    spinTrigger.disabled = true;
+                    showAlert("Oyun bitti! Sayfayı yenileyerek yeni turnuvaya katılabilirsiniz.");
+                }
+            }, 3000);
+        });
+
+        // Lobiden Çıkış
+        document.getElementById('wheel-back').addEventListener('click', () => {
+            wheelScreen.classList.add('hidden');
+            lobbyScreen.classList.remove('hidden');
+        });
+
+        // Özel Modal Yardımcı Fonksiyonları
+        function showAlert(text) {
+            modalText.innerText = text;
+            alertModal.classList.add('show');
+        }
+        document.getElementById('modal-close-btn').addEventListener('click', () => {
+            alertModal.classList.remove('show');
+        });
+    </script>
+</body>
+</html>
