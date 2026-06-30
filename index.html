@@ -3,366 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aurea Enes Deva</title>
+    <title>Özel Link Kısaltıcı</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #0b0c10; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; height: 100vh; }
-        
-        .screen { display: none; width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; justify-content: center; align-items: center; flex-direction: column; }
-        .active { display: flex; }
-
-        /* Başlangıç Butonu */
-        #start-btn { padding: 15px 40px; font-size: 24px; background: linear-gradient(45deg, #ff007f, #7f00ff); border: none; color: white; border-radius: 50px; cursor: pointer; font-weight: bold; box-shadow: 0 0 20px rgba(255,0,127,0.5); transition: 0.3s; }
-        #start-btn:hover { transform: scale(1.05); }
-
-        /* Animasyon Ekranı */
-        #animation-screen { background: #000; overflow: hidden; }
-        .element-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
-        
-        /* Futbol Topu */
-        #football { width: 100px; height: 100px; background: white; border-radius: 50%; position: absolute; transition: all 3s ease-in-out; display: none; background-image: radial-gradient(circle at 30% 30%, #fff, #333 80%), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,30 31,44 38,67 62,67 69,44" fill="black"/></svg>'); background-size: cover; box-shadow: inset -10px -10px 20px rgba(0,0,0,0.8); }
-        
-        /* Türkiye Haritası Simülasyonu */
-        #turkey-map { width: 80%; max-width: 800px; opacity: 0; transition: opacity 1s; display: none; position: relative; }
-        #hatay-dot { width: 15px; height: 15px; background: red; border-radius: 50%; position: absolute; bottom: 18%; left: 62%; box-shadow: 0 0 15px 5px red; display: none; }
-
-        /* Kalp Ritmi Animasyonu */
-        #ecg-container { display: none; width: 300px; height: 150px; position: absolute; }
-        .ecg-line { stroke: #00ff00; stroke-width: 3; stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: dash 2s linear infinite; }
-        @keyframes dash { to { stroke-dashoffset: 0; } }
-
-        /* Giriş / Kayıt Ekranı */
-        .auth-card { background: rgba(255,255,255,0.05); padding: 40px; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 400px; text-align: center; }
-        h2 { margin-bottom: 20px; color: #4fc3f7; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #222; color: white; font-size: 16px; }
-        .btn { width: 100%; padding: 12px; background: #4fc3f7; border: none; color: #000; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 15px; transition: 0.2s; }
-        .btn:hover { background: #29b6f6; }
-
-        /* Oyun Seçim Ekranı */
-        .games-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; max-width: 900px; margin-top: 20px; }
-        .game-card { background: #1f2833; border: 2px solid #45f3ff; border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; position: relative; transition: 0.3s; height: 120px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; text-transform: uppercase; background-size: cover; background-position: center; }
-        .game-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(69,243,255,0.4); }
-        .game-card.locked { filter: grayscale(80%) brightness(50%); }
-
-        /* Çark Ekranı */
-        .wheel-container { position: relative; width: 300px; height: 300px; margin-bottom: 30px; }
-        #wheel { width: 100%; height: 100%; border-radius: 50%; border: 5px solid #fff; position: relative; transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1); background: conic-gradient(#ff2a74 0% 12.5%, #333 12.5% 25%, #ff2a74 25% 37.5%, #333 37.5% 50%, #ff2a74 50% 62.5%, #333 62.5% 75%, #ff2a74 75% 87.5%, #333 87.5% 100%); }
-        .wheel-pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid #fff; z-index: 10; }
-        .wheel-label { position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 20px; }
-
-        /* Genel Bilgilendirme Kutusu */
-        .info-bar { background: #1a1a1a; padding: 15px 30px; border-radius: 30px; margin-bottom: 20px; border: 1px solid #333; display: flex; gap: 40px; font-size: 18px; }
-        .info-bar span span { color: #45f3ff; font-weight: bold; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #121212;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+        h2 { margin-bottom: 20px; color: #00adb5; }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #333;
+            border-radius: 6px;
+            background: #252525;
+            color: #fff;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #00adb5;
+            border: none;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover { background: #007c82; }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #2d2d2d;
+            border-radius: 6px;
+            display: none;
+            word-break: break-all;
+        }
+        .result a { color: #00adb5; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <!-- 0. EKRAN: BAŞLANGIÇ TETİKLEYİCİ -->
-    <div id="screen-start" class="screen active">
-        <button id="start-btn" onclick="initiateSystem()">SİSTEMİ BAŞLAT (VIP)</button>
-    </div>
+<div class="container">
+    <h2>Özel Link Kısaltıcı</h2>
+    
+    <input type="url" id="longUrl" placeholder="Kısaltılacak Uzun URL (https://...)" required>
+    <input type="text" id="customAlias" placeholder="İstediğiniz Özel İsim (Örn: instagram)" required>
+    
+    <button id="shortenBtn">Linki Kısalt</button>
 
-    <!-- 1. EKRAN: ANİMASYON EKRANI -->
-    <div id="animation-screen" class="screen">
-        <div class="element-container">
-            <!-- Dünya Kupası Topu -->
-            <div id="football"></div>
-            <!-- Türkiye Haritası Temsili SVG -->
-            <svg id="turkey-map" viewBox="0 0 1000 400" fill="#222" stroke="#444">
-                <rect width="1000" height="400" fill="#111" rx="15"/>
-                <path d="M150,150 Q300,100 500,120 T850,150 L880,280 Q650,320 500,280 T120,250 Z" fill="#252525" stroke="#555" stroke-width="2"/>
-                <text x="500" y="200" fill="#333" font-size="30" text-anchor="middle">TÜRKİYE</text>
-            </svg>
-            <div id="hatay-dot"></div>
-            
-            <!-- Kalp Ritmi Ritmi -->
-            <svg id="ecg-container" viewBox="0 0 300 150">
-                <path class="ecg-line" d="M0,75 L90,75 L100,55 L110,95 L120,35 L130,115 L140,75 L150,75 L160,55 L170,95 L180,35 L190,115 L200,75 L300,75" fill="none"/>
-            </svg>
-        </div>
+    <div class="result" id="resultDiv">
+        <p>Kısa Linkiniz Hazır! 🎉</p>
+        <a href="#" id="shortLink" target="_blank"></a>
     </div>
+</div>
 
-    <!-- 2. EKRAN: GİRİŞ / KAYIT -->
-    <div id="auth-screen" class="screen">
-        <div class="auth-card">
-            <h2 id="auth-title">AUREA ENES DEVA - GİRİŞ</h2>
-            <input type="text" id="username" placeholder="İsim Soyisim">
-            <input type="password" id="password" placeholder="Şifre">
-            <button class="btn" onclick="handleAuth()">Giriş Yap / Kayıt Ol</button>
-        </div>
-    </div>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    <!-- 3. EKRAN: OYUN SEÇİM ALANI -->
-    <div id="lobby-screen" class="screen">
-        <div class="info-bar">
-            <span>Bütçe: <span id="lobby-budget">1000 TL</span></span>
-            <span>Bakiye: <span id="lobby-balance">0 TL</span></span>
-        </div>
-        <h2>ŞANS OYUNLARI (VIP)</h2>
-        <div class="games-grid" id="games-container"></div>
-    </div>
+    // Enes Bey, sizin Firebase bilgileriniz buraya başarıyla eklendi:
+    const firebaseConfig = {
+        apiKey: "AIzaSyANYynbcsN8dgRoqZL_y9C7tKCH_WNVK2Q",
+        authDomain: "gelbence-dd8de.firebaseapp.com",
+        projectId: "gelbence-dd8de",
+        storageBucket: "gelbence-dd8de.firebasestorage.app",
+        messagingSenderId: "73726812133",
+        appId: "1:73726812133:web:e336c100bfd7f9b46c590c"
+    };
 
-    <!-- 4. EKRAN: ÇARK OYUNU -->
-    <div id="wheel-screen" class="screen">
-        <div class="info-bar">
-            <span>Kalan Hak: <span id="wheel-spin-count">5</span></span>
-            <span>Bütçe: <span id="wheel-budget">1000 TL</span></span>
-            <span>Kazanılan Bakiye: <span id="wheel-balance">0 TL</span></span>
-        </div>
-        <div class="wheel-container">
-            <div class="wheel-pointer"></div>
-            <div id="wheel">
-                <div class="wheel-label">SPIN</div>
-            </div>
-        </div>
-        <button class="btn" style="max-width:200px;" id="spin-btn" onclick="spinWheel()">ÇARKITI ÇEVİR</button>
-    </div>
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-    <script>
-        // --- SİSTEM DEĞİŞKENLERİ VE DÖNGÜ YÖNETİMİ ---
-        // Sayfa yenilendiğinde şifre durumunu takip etmek için localStorage kullanıyoruz.
-        if(!localStorage.getItem('system_cycle')) {
-            localStorage.setItem('system_cycle', '1'); // 1: İlk açılış (75), 2: Yenilendi (76)
-            localStorage.setItem('use_count', '1'); // Toplamda kaç kez kullanıldığını sayar
+    const shortenBtn = document.getElementById('shortenBtn');
+    const resultDiv = document.getElementById('resultDiv');
+    const shortLink = document.getElementById('shortLink');
+
+    shortenBtn.addEventListener('click', async () => {
+        const longUrl = document.getElementById('longUrl').value.trim();
+        const customAlias = document.getElementById('customAlias').value.trim().toLowerCase().replace(/[^a-z0-9-_]/g, ''); 
+
+        if (!longUrl || !customAlias) {
+            alert('Lütfen tüm alanları doldurun!');
+            return;
         }
 
-        let currentCycle = parseInt(localStorage.getItem('system_cycle'));
-        let useCount = parseInt(localStorage.getItem('use_count'));
+        try {
+            const docRef = doc(db, "links", customAlias);
+            const docSnap = await getDoc(docRef);
 
-        // Şifre ve Bakiye Kuralları Belirleme
-        let validUser = "enes deva";
-        let validPass = (currentCycle === 1) ? "78780075" : "78780076";
-        let isSecondPhase = (currentCycle === 2);
-
-        // Oyun İçi Dinamik Değişkenler
-        let budget = 1000;
-        let balance = isSecondPhase ? 110 : 0;
-        let spinCount = 5;
-        let currentSpinStep = 0;
-
-        // Çark Hedef Dereceleri (Her biri tam 360 derece dönecek şekilde ayarlandı)
-        // Kadran düzenine göre: 0 derece üst noktadır.
-        const spinResults = [
-            { deg: 360 * 1 + 45, prize: 90 },   // 1. Çevirme: 90 TL
-            { deg: 360 * 2 + 135, prize: 0 },   // 2. Çevirme: 0 TL
-            { deg: 360 * 3 + 225, prize: 20 },  // 3. Çevirme: 20 TL
-            { deg: 360 * 4 + 135, prize: 0 },   // 4. Çevirme: 0 TL
-            { deg: 360 * 5 + 135, prize: 0 }    // 5. Çevirme: 0 TL
-        ];
-
-        // --- SES EFEKTLERİ SİMÜLASYONU (Web Audio API) ---
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
-        function playBeep() {
-            let osc = audioCtx.createOscillator();
-            let gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(1000, audioCtx.currentTime); // 1000Hz Bip sesi
-            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-            osc.start();
-            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.1);
-            osc.stop(audioCtx.currentTime + 0.1);
-        }
-
-        function playRoar() {
-            // Aslan kükremesi için gürültülü ve kalın bir synth sesi simülasyonu
-            let bufferSize = audioCtx.sampleRate * 1.5,
-                buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate),
-                data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = Math.random() * 2 - 1;
+            if (docSnap.exists()) {
+                alert("Bu özel isim daha önce alınmış! Lütfen başka bir isim deneyin.");
+                return;
             }
-            let noise = audioCtx.createBufferSource();
-            noise.buffer = buffer;
-            let filter = audioCtx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(200, audioCtx.currentTime);
-            filter.Q.setValueAtTime(10, audioCtx.currentTime);
-            
-            noise.connect(filter);
-            filter.connect(audioCtx.destination);
-            noise.start();
-            filter.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 1.5);
-            noise.stop(audioCtx.currentTime + 1.5);
+
+            await setDoc(docRef, {
+                url: longUrl,
+                createdAt: new Date()
+            });
+
+            const currentHost = window.location.origin + window.location.pathname;
+            const finalShortUrl = `${currentHost}?id=${customAlias}`;
+
+            shortLink.href = finalShortUrl;
+            shortLink.innerText = finalShortUrl;
+            resultDiv.style.display = 'block';
+
+        } catch (error) {
+            console.error("Hata oluştu: ", error);
+            alert("Veritabanına bağlanırken bir hata oluştu!");
         }
+    });
 
-        // --- AKIŞ KONTROLLERİ ---
+    const urlParams = new URLSearchParams(window.location.search);
+    const aliasParam = urlParams.get('id');
 
-        function initiateSystem() {
-            // Tam ekran modu aktivasyonu (Bağlantı adresi gizleme amaçlı)
-            let docEl = document.documentElement;
-            if (docEl.requestFullscreen) docEl.requestFullscreen();
-            else if (docEl.mozRequestFullScreen) docEl.mozRequestFullScreen();
-            else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen();
-            else if (docEl.msRequestFullscreen) docEl.msRequestFullscreen();
-
-            switchScreen('screen-start', 'animation-screen');
-            runAnimationSequence();
-        }
-
-        function switchScreen(fromId, toId) {
-            document.getElementById(fromId).classList.remove('active');
-            document.getElementById(toId).classList.add('active');
-        }
-
-        // 1. ADIM: Dünya Kupası Topu -> Hatay -> Aslan Kükremesi -> Kalp Ritmi (20sn)
-        function runAnimationSequence() {
-            const ball = document.getElementById('football');
-            const map = document.getElementById('turkey-map');
-            const dot = document.getElementById('hatay-dot');
-            const ecg = document.getElementById('ecg-container');
-
-            // Futbol topu belirir
-            ball.style.display = 'block';
-            ball.style.transform = 'scale(1.5) rotate(360deg)';
-            
-            setTimeout(() => {
-                // Harita gelir, top küçülür ve Hatay'a doğru süzülür
-                map.style.display = 'block';
-                setTimeout(() => map.style.opacity = '1', 100);
-                
-                ball.style.width = '30px';
-                ball.style.height = '30px';
-                // Harita üzerindeki Hatay koordinatına hedefleme simülasyonu
-                ball.style.top = '66%'; 
-                ball.style.left = '59.5%';
-            }, 2000);
-
-            setTimeout(() => {
-                // Hatay'a varış: Aslan kükremesi ve VIP giriş tetiklenmesi
-                ball.style.display = 'none';
-                dot.style.display = 'block';
-                playRoar();
-                
-                // Haritayı gizle ve Kalp Ritmi çizgilerini aç
-                map.style.display = 'none';
-                dot.style.display = 'none';
-                ecg.style.display = 'block';
-
-                // 20 Saniye boyunca kalp ritmi çizgisi ve bip sesi döngüsü
-                let beepInterval = setInterval(() => {
-                    playBeep();
-                }, 1000);
-
-                setTimeout(() => {
-                    clearInterval(beepInterval);
-                    ecg.style.display = 'none';
-                    // 2. Ekran: Giriş ekranına geçiş
-                    switchScreen('animation-screen', 'auth-screen');
-                    // Yenilenen ekran fazındaysak arayüzü güncelle
-                    if(isSecondPhase) {
-                        document.getElementById('auth-title').innerText = "AUREA ENES DEVA - YENİ GİRİŞ (76)";
-                    }
-                }, 20000); // Tam 20 saniye
-
-            }, 5000);
-        }
-
-        // 2. ADIM: Giriş / Kayıt Kontrolü
-        function handleAuth() {
-            let userInp = document.getElementById('username').value.trim().toLowerCase();
-            let passInp = document.getElementById('password').value.trim();
-
-            if (userInp === validUser && passInp === validPass) {
-                if (isSecondPhase) {
-                    // İkinci şifreli ekranda direkt limit uyarı ekranı veriliyor oyun oynatılmıyor
-                    alert(`Oyun Oynanamaz! Mevcut bakiyeniz: 110 TL'dir. 120 TL altında bakiye ile oyun oynanamaz ve en az çekim limiti 500 TL'dir!`);
-                    
-                    // Döngü Mantığı: Başka bir kullanımdan sonra sıfırlanma takibi
-                    if (useCount >= 4) { // Toplamda 2 kez 75, 2 kez 76 tamamlandığında başa sarar
-                        localStorage.setItem('system_cycle', '1');
-                        localStorage.setItem('use_count', '1');
-                    } else {
-                        localStorage.setItem('system_cycle', '1'); // Yeniden 75'e dön
-                        localStorage.setItem('use_count', (useCount + 1).toString());
-                    }
-                    location.reload();
-                } else {
-                    // İlk aşama (75) ise oyun lobisine aktar
-                    switchScreen('auth-screen', 'lobby-screen');
-                    setupLobby();
-                }
+    if (aliasParam) {
+        const docRef = doc(db, "links", aliasParam);
+        getDoc(docRef).then((docSnap) => {
+            if (docSnap.exists()) {
+                window.location.href = docSnap.data().url;
             } else {
-                // Farklı veri girişinde Whatsapp onay mekanizması simülasyonu
-                let message = encodeURIComponent(`Sitede farklı bir isim/şifre ile kayıt/giriş talebi algılandı! Girilen İsim: ${userInp}`);
-                alert("Giriş yetkisi yetersiz. Whatsapp üzerinden izin talebi gönderiliyor...");
-                window.open(`https://wa.me/905518329861?text=${message}`, '_blank');
+                alert("Bu kısa link sistemde bulunamadı veya silinmiş!");
             }
-        }
+        });
+    }
+</script>
 
-        // 3. ADIM: Şans Oyunları Lobisi (20 Adet Efsane Görsel/Kart)
-        function setupLobby() {
-            const container = document.getElementById('games-container');
-            container.innerHTML = "";
-            
-            // Güncel Bakiye Gösterimleri
-            document.getElementById('lobby-budget').innerText = budget + " TL";
-            document.getElementById('lobby-balance').innerText = balance + " TL";
-
-            for (let i = 1; i <= 20; i++) {
-                let card = document.createElement('div');
-                card.className = "game-card";
-                // Çark dışındaki oyunları kilitli gösteriyoruz
-                if (i !== 1) card.classList.add('locked');
-                
-                // Sahte efsanevi oyun arka planları tasarımı
-                card.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://picsum.photos/id/${i+10}/200/120')`;
-                card.innerText = i === 1 ? "🎰 ÇARK OYUNU (VIP)" : `EFSANE OYUN #${i}`;
-                
-                card.onclick = function() {
-                    if (i === 1) {
-                        switchScreen('lobby-screen', 'wheel-screen');
-                        updateWheelUI();
-                    } else {
-                        alert("Bu oyuna giriş yapılamaz! Sadece çark oyunu 1000 TL'lik bütçe ile oynanabilir şekilde aktif edilmiştir.");
-                    }
-                };
-                container.appendChild(card);
-            }
-        }
-
-        // 4. ADIM: Çarkıfelek Alanı Operasyonları
-        function updateWheelUI() {
-            document.getElementById('wheel-spin-count').innerText = spinCount;
-            document.getElementById('wheel-budget').innerText = budget + " TL";
-            document.getElementById('wheel-balance').innerText = balance + " TL";
-        }
-
-        function spinWheel() {
-            if (spinCount <= 0) return;
-
-            let btn = document.getElementById('spin-btn');
-            btn.disabled = true;
-
-            let currentStepData = spinResults[currentSpinStep];
-            let wheel = document.getElementById('wheel');
-            
-            // Çarkı tam 360 derece döndürerek hedef noktaya getiriyoruz
-            wheel.style.transform = `rotate(${currentStepData.deg}deg)`;
-
-            setTimeout(() => {
-                // Çevrim tamamlandığında bütçe ve bakiye düşüş/artış hesapları
-                budget -= 200;
-                balance += currentStepData.prize;
-                spinCount--;
-                currentSpinStep++;
-
-                updateWheelUI();
-                btn.disabled = false;
-
-                alert(`Bu çevirmeden kazancınız: ${currentStepData.prize} TL! Kalan Bütçeniz: ${budget} TL`);
-
-                if (spinCount === 0) {
-                    alert("Çevrim hakkınız bitmiştir! Sistem güncelleniyor, sayfa yenilenecek.");
-                    // İlk aşama (75) bitti, şifreyi 76 yapmak üzere evreyi ayarla ve sayfayı yenile
-                    localStorage.setItem('system_cycle', '2');
-                    localStorage.setItem('use_count', (useCount + 1).toString());
-                    location.reload();
-                }
-            }, 3000); // 3 saniyelik dönme animasyonu süresi
-        }
-    </script>
 </body>
 </html>
